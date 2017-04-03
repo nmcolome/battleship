@@ -10,7 +10,7 @@ module ShipPlacement
     numbers[0..size - 1]
   end
 
-  def ship_placement_coordinates
+  def ship_placement_coordinates(head, tail)
     starting = head.split(//)
     ending = tail.split(//)
     y_start = columns_key.index(starting[0])
@@ -19,7 +19,7 @@ module ShipPlacement
     x_end = rows_key.index(ending[1])
   end
 
-  def random_comp_coordinates(ship_type)
+  def random_comp_coordinates(ship_type, magnitude)
     position = rand(2)
     if position = 0 #horizontal
       row = rand(size)
@@ -32,8 +32,22 @@ module ShipPlacement
     end
   end
   
-  def computer_setup
-    @grid
+  def ship_setup(y_start, x_start, y_end, x_end)
+    if y_start == y_end
+      @grid[y_start][x_start] = "<"
+      @grid[y_end][x_end] = ">"
+      until index == x_end
+        index = x_start.next
+        @grid[y_start][index] = "*"
+      end
+    else
+      @grid[y_start][x_start] = "^"
+      @grid[y_end][x_end] = "v"
+      until grid_row == x_end
+        grid_row = y_start.next
+        @grid[grid_row][x_start] = "*"
+      end
+    end
   end
 
   def coordinates_comply?
