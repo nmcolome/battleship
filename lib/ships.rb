@@ -1,20 +1,28 @@
 require './lib/grid.rb'
+require './lib/cell.rb'
 
 class Ships
-  attr_reader :head, :tail, :type
+  attr_reader :type #:head, :tail,
 
-  def initialize(type, head, tail)
-    @head = head
-    @tail = tail
+  def initialize(type)
+    # @head = head
+    # @tail = tail
     @type = type
   end
   
-  def magnitude #why do I have to put return in order for the test to work
-    return 2 if type == "patrol"
-    return 3 if type == "submarine"
-    return 3 if type == "destroyer"
-    return 4 if type == "battleship"
-    return 5 if type == "carrier"
+  def magnitude
+    case type
+      when "patrol"
+        2
+      when "submarine"
+        3
+      when "destroyer"
+        3
+      when "battleship"
+        4
+      when "carrier"
+        5
+    end
   end
-    
+  
 end
