@@ -1,13 +1,15 @@
+require './lib/grid.rb'
+
 module ShipPlacement
   
   def columns_key
     alpha = ("A".."Z").to_a
-    alpha[0..size]
+    alpha[0..board_size]
   end
 
   def rows_key
     numbers = (1..20).to_a
-    numbers[0..size - 1]
+    numbers[0..board_size - 1]
   end
 
   def ship_placement_coordinates(head, tail)
@@ -21,14 +23,22 @@ module ShipPlacement
 
   def random_comp_coordinates(ship_type, magnitude)
     position = rand(2)
-    if position = 0 #horizontal
-      row = rand(size)
-      column = rand(size - magnitude)
-      comp_ship_type = Ships.new(ship_type, "#{row}#{column}", "#{row}#{column + size - 1}")
-    else
-      row = rand(size-magnitude)
-      column = rand(size)
-      comp_ship_type = Ships.new(ship_type, "#{row}#{column}", "#{row + size - 1}#{column}")
+    if position == 0 #horizontal
+      row = rand(board.board_size)
+      column = rand(board.board_size - magnitude + 1)
+      first_cell = Cell.new("#{row}#{column}")
+      last_cell = Cell.new("#{row}#{column + magnitude - 1}")
+      ship.head = first_cell
+      ship.tail = last_cell
+      # comp_ship_type = Ships.new(ship_type, "#{row}#{column}", "#{row}#{column + size - 1}")
+    else #vertical
+      row = rand(board.board_size - magnitude + 1)
+      column = rand(board.board_size)
+      first_cell = Cell.new("#{row}#{column}")
+      last_cell = Cell.new("#{row + magnitude - 1}#{column}")
+      ship.head = first_cell
+      ship.tail = last_cell
+      # comp_ship_type = Ships.new(ship_type, "#{row}#{column}", "#{row + size - 1}#{column}")
     end
   end
   
