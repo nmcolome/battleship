@@ -2,12 +2,12 @@ require './lib/grid.rb'
 require './lib/cell.rb'
 
 class Ships
-  attr_reader :type #:head, :tail,
+  attr_reader :type, :head, :tail
 
   def initialize(type)
-    # @head = head
-    # @tail = tail
-    @type = type
+    @type = type    
+    @head = head
+    @tail = tail
   end
   
   def magnitude
@@ -24,5 +24,4 @@ class Ships
         5
     end
   end
-  
 end

@@ -1,5 +1,8 @@
-require './lib/grid.rb'
+require './lib/battleship.rb'
+require './lib/messages.rb'
+require './lib/ships.rb'
 
-board = Grid.new(8)
-# p board
-board.print_grid
+
+
+game = Battleship.new
+game.welcome_message
