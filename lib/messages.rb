@@ -14,5 +14,12 @@ module Messages
   def quit
     puts "You exited the game succesfully"
   end
+
+  def level
+    puts "What difficulty level would you like to play?"
+    puts "(b)eginner = 4x4 grid, 2-unit boat, 3-unit boat"
+    puts "inter(m)ediate = 8x8 grid, 2-unit boat, 3-unit boat, 4-unit boat"
+    puts "(a)dvanced = 12x12 grid, 2-unit boat, 3-unit boat, 4-unit boat, 5-unit boat"
+  end
   
 end
