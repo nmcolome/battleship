@@ -4,11 +4,11 @@ class Grid
   include ShipPlacement
 
   attr_reader :grid
-  attr_accessor :size
+  attr_accessor :board_size
 
-  def initialize(size, value = "^")
-    @size = size
-    @grid = Array.new(size, Array.new(size, value))
+  def initialize(board_size, value = ".")
+    @board_size = board_size
+    @grid = Array.new(board_size, Array.new(board_size, value))
   end
 
   def total_rows
@@ -35,7 +35,7 @@ class Grid
 
   def border
     symbol = "==="
-    borders = Array.new(size + 1, symbol)
+    borders = Array.new(board_size + 1, symbol)
   end
 
 end
