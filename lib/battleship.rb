@@ -7,7 +7,8 @@ require './lib/messages.rb'
   action = gets.chomp
 
   if action == "p" || action == "play"
-    ship_layout
+    level
+    action = gets.chomp
   elsif action == "i" || action == "instructions"
     instructions
     puts "press ENTER to return"
