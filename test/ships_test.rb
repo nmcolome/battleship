@@ -1,6 +1,7 @@
 require './test/test_helper'
 require './lib/ships.rb'
 require './lib/grid.rb'
+require './lib/cell.rb'
 
 class ShipsTest < Minitest::Test
 
@@ -29,4 +30,37 @@ class ShipsTest < Minitest::Test
     ship_3 = Ships.new("carrier")
     assert_equal 5, ship_3.magnitude    
   end
+
+  def test_if_accepts_multiple_cells
+    assert_equal [], @ship.cell
+
+    @ship << Cell.new("A2")
+    @ship << Cell.new("A3")
+    assert_equal 2, @ship.cell.count
+  end
+
+  def test_it_outputs_the_row
+    @ship << Cell.new("A2")
+    @ship << Cell.new("A3")
+    
+    assert_equal "A", @ship.row(0)
+    assert_equal "A", @ship.row(1)
+  end
+
+  def test_it_outputs_the_column
+    @ship << Cell.new("A2")
+    @ship << Cell.new("A3")
+
+    assert_equal "2", @ship.column(0)
+    assert_equal "3", @ship.column(1)
+  end
+
+  def test_it_outputs_the_coordinates
+    @ship << Cell.new("A2")
+    @ship << Cell.new("A3")
+
+    assert_equal ["A", "2"], @ship.coordinates(0)
+    assert_equal ["A", "3"], @ship.coordinates(1)
+  end
+
 end
