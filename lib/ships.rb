@@ -1,7 +1,9 @@
-# require './lib/grid.rb'
 require './lib/cell.rb'
+require './lib/ship_placement.rb'
 
 class Ships
+  include ShipPlacement
+
   attr_accessor :type, :cell
 
   def initialize(type)
@@ -28,12 +30,21 @@ class Ships
     @cell << cell
   end
 
+  def clear
+    @cell = []
+  end
+
+  def insert(position, cell)
+    @cell.insert(position, cell)
+  end
+
   def row(cell_idx)
-    @cell[cell_idx].row
+    letter = @cell[cell_idx].row
+    ALPHA.index(letter)
   end
 
   def column(cell_idx)
-    @cell[cell_idx].column
+    @cell[cell_idx].column.to_i
   end
 
   def coordinates(cell_idx)

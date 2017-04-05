@@ -38,12 +38,11 @@ module Messages
       puts "The grid is #{board_size}x#{board_size}, it has A1 at the top left and D4 at the bottom right."
     end
     puts
-    
-    ships_details = ["patrol (2-units)", "submarine (3-units)", "destroyer (3-units)", "battleship (4-units)", "carrier (5-units)"]
-    ships_details[0..ships-1].each do 
-      puts "Enter the starting and ending squares for the #{ship} ship:"
-      user_coordinates = gets.chomp
-    end
+    user_setup(board_size, ships)
+  end
+
+  def re_insert_squares
+    puts ""
   end
   
 end

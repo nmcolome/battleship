@@ -31,7 +31,7 @@ class ShipsTest < Minitest::Test
     assert_equal 5, ship_3.magnitude    
   end
 
-  def test_if_accepts_multiple_cells
+  def test_if_adds_cells
     assert_equal [], @ship.cell
 
     @ship << Cell.new("A2")
@@ -39,20 +39,33 @@ class ShipsTest < Minitest::Test
     assert_equal 2, @ship.cell.count
   end
 
+  def test_it_inserts_new_cells
+    assert_equal [], @ship.cell
+
+    @ship << Cell.new("A2")
+    @ship << Cell.new("A4")
+    @ship.insert(1, Cell.new("A3"))
+    
+    assert_equal 3, @ship.cell.count
+    assert_equal ["A", "2"], @ship.coordinates(0)
+    assert_equal ["A", "3"], @ship.coordinates(1)
+    assert_equal ["A", "4"], @ship.coordinates(2)
+  end
+
   def test_it_outputs_the_row
     @ship << Cell.new("A2")
     @ship << Cell.new("A3")
     
-    assert_equal "A", @ship.row(0)
-    assert_equal "A", @ship.row(1)
+    assert_equal 0, @ship.row(0)
+    assert_equal 0, @ship.row(1)
   end
 
   def test_it_outputs_the_column
     @ship << Cell.new("A2")
     @ship << Cell.new("A3")
 
-    assert_equal "2", @ship.column(0)
-    assert_equal "3", @ship.column(1)
+    assert_equal 2, @ship.column(0)
+    assert_equal 3, @ship.column(1)
   end
 
   def test_it_outputs_the_coordinates
@@ -63,4 +76,14 @@ class ShipsTest < Minitest::Test
     assert_equal ["A", "3"], @ship.coordinates(1)
   end
 
+  def test_it_can_delete_data_of_cell
+    @ship << Cell.new("A2")
+    @ship << Cell.new("A3")
+
+    assert_equal ["A", "2"], @ship.coordinates(0)
+    assert_equal ["A", "3"], @ship.coordinates(1)
+
+    @ship.clear
+    assert_equal 0, @ship.cell.count    
+  end
 end

@@ -21,21 +21,20 @@ class Grid
 
   def print_grid
     puts border.join
-    print "*  "
-    print rows_key.join("  ")
+    print "-  "
+    print columns_key(@board_size).join("  ")
     puts
     @grid.each_with_index do |row, idx|
-      print columns_key[idx]
+      print rows_key(@board_size)[idx]
       print "  "
       print row.join("  ")
       puts
     end
-    print border.join
+    puts border.join
   end
 
   def border
-    symbol = "==="
-    borders = Array.new(board_size + 1, symbol)
+    borders = Array.new(board_size + 1, "===")
   end
 
   # def update_grid(grid)
