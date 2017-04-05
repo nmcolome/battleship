@@ -1,5 +1,5 @@
 class Cell
-  attr_reader :row, :column
+  attr_reader :row, :column, :coordinates
   
   def initialize(coordinates)
     @coordinates = coordinates.split(//)
