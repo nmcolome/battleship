@@ -1,13 +1,12 @@
-require './lib/grid.rb'
+# require './lib/grid.rb'
 require './lib/cell.rb'
 
 class Ships
-  attr_reader :type, :head, :tail
+  attr_accessor :type, :cell
 
   def initialize(type)
     @type = type    
-    @head = head
-    @tail = tail
+    @cell = []
   end
   
   def magnitude
@@ -23,5 +22,21 @@ class Ships
       when "carrier"
         5
     end
+  end
+
+  def << (cell)
+    @cell << cell
+  end
+
+  def row(cell_idx)
+    @cell[cell_idx].row
+  end
+
+  def column(cell_idx)
+    @cell[cell_idx].column
+  end
+
+  def coordinates(cell_idx)
+    @cell[cell_idx].coordinates
   end
 end
