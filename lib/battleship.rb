@@ -9,12 +9,14 @@ class Battleship
   include Messages
   include ShipPlacement
 
-  # attr_reader :ships, :board
+  attr_reader :comp_board, :user_board, :user_shot_board, :comp_shot_board
 
-  # def initialize
-  #   @ships = ships
-  #   @board = board
-  # end
+  def initialize
+    @comp_board = comp_board
+    @user_board = user_board
+    @user_shot_board = user_shot_board
+    @user_shot_board = user_shot_board
+  end
 
   def welcome_message
     puts welcome
@@ -50,20 +52,21 @@ class Battleship
 
   def user_setup(board_size, num_of_ships)
     user_ships = ship_creation(num_of_ships)
-    user_board = Grid.new(board_size)
-    prompt_coordinates(user_ships.count, user_ships, user_board)
+    @user_board = Grid.new(board_size)
+    prompt_coordinates(user_ships.count, user_ships, @user_board)
   end
   
   def prompt_coordinates(num_of_ships, ships, user_board)
-    # ships_details = ["patrol (2-units)", "submarine (3-units)", "destroyer (3-units)", "battleship (4-units)", "carrier (5-units)"]
     ships.map do |ship|
       # binding.pry
       coordinate_input(ship)
-      until coord_validation(ship, user_board) != false
+      until coord_validation(ship, @user_board) != false
         coordinate_input(ship)
       end
     end
-      ship_placement(ships, user_board)
+      ship_placement(ships, @user_board)
+      @user_board.print_grid
+      player_shot_sequence(user_board.board_size)
   end
 
   def coordinate_input(ship)
@@ -87,17 +90,16 @@ class Battleship
 
   def computer_setup(board_size, num_of_ships)
     computer_ships = ship_creation(num_of_ships)
-    comp_board = Grid.new(board_size)    
-    computer_placement(computer_ships, comp_board)
+    @comp_board = Grid.new(board_size)    
+    computer_placement(computer_ships, @comp_board)
   end
 
   def build_mid_squares(ship)
-    p ship
     if ship.row(0) == ship.row(1) #is horizontal
       middle = ship.column(0).next
       until middle == ship.column(1)
         position = 1
-        ship.insert(position, Cell.new([ship.row(0)][middle]))
+        ship.insert(position, Cell.new("#{[ship.row(0)]}#{[middle]}"))
         middle += 1
         position +=1
       end
@@ -105,7 +107,7 @@ class Battleship
       middle = ship.row(0).next
       until middle == ship.row(1)
         position = 1
-        ship.insert(position, Cell.new([middle][ship.column(0)]))
+        ship.insert(position, Cell.new("#{[middle]}#{[ship.column(0)]}"))
         middle += 1
         position +=1
       end
@@ -135,7 +137,7 @@ class Battleship
 
     c_comply = []
     c_comply = (0..index).map do |idx|
-      rows.include?(ALPHA[ship.row(idx)]) && columns.include?(NUMBERS[ship.column(idx)])
+      rows.include?(ALPHA[ship.row(idx)]) && columns.include?(NUMBERS[ship.column(idx) - 1])
     end
     if c_comply.include?(false)
       puts "Ships cannot wrap around the board. Please assign new coordinates"
@@ -162,7 +164,8 @@ class Battleship
     overlap = []   
     
     overlap = (0..last).map do |idx|
-      board.grid[ship.row(idx)][NUMBERS.index(ship.column(idx))] == " " #da error la columna y no entiendo porq
+      p ship.column(idx)
+      board.grid[ship.row(idx)][NUMBERS.index(ship.column(idx))] == " " #da error la columna y no entiendo porq - it returns nil
     end
 
     if overlap.include?(false)
@@ -189,15 +192,15 @@ class Battleship
   end
 
   def computer_placement(computer_ships, comp_board) #pendiente de validar q no haya overlap
-    comp_board_size = comp_board.board_size
+    @comp_board_size = @comp_board.board_size
     #inicio de loop q no se como hacer
     comp_ship_coord = computer_ships.map do |ship|
-      random_comp_coordinates(ship, ship.magnitude, comp_board_size)
+      random_comp_coordinates(ship, ship.magnitude, @comp_board_size)
     end
     computer_ships.map do |ship|
-      ship_placement(ship, comp_board)
+      ship_placement(ship, @comp_board)
     end
-    p comp_board.print_grid #eliminar
+    p @comp_board.print_grid #eliminar
   end
 
   def random_comp_coordinates(ship, magnitude, board_size)
@@ -214,4 +217,49 @@ class Battleship
       ship << Cell.new("#{ALPHA[row + magnitude - 1]}#{column}")
     end
   end
+
+  def player_shot_sequence(board_size)
+    @user_shot_board = Grid.new(board_size)
+    @user_shot_board.print_grid
+    shot_prompt
+    until validate_shot(shot, @comp_board) != false
+      shot_prompt
+    end
+    execute_shot(@user_shot_board, @comp_board, shot)
+  end
+
+  def validate_shot(shot, board)
+    shots = []
+    shots << shot
+
+    c_val = []
+    c_val << false if shot_coor_comply?(shot, board) == false
+    c_val << false if shots.include?(shot)
+    c_val = false if c_val.include?(false)
+  end
+
+  def shot_coor_comply?(shot, board) #is outside of board
+    size = board.board_size
+    rows = rows_key(size - 1)
+    columns = columns_key(size)
+
+    s_comply = (0..index).map do |idx|
+      rows.include?(shot.row) && columns.include?(shot.column)
+    end
+    if s_comply == false
+      puts "The shot cannot be outside the board. Please assign new coordinates"
+      s_comply
+    end 
+  end
+
+  def execute_user_shot(user_shot_board, comp_board, shot)
+    if @comp_board.grid[shot.row][shot.column] != " "
+      @user_shot_board.grid[shot.row][shot.column] = "H"
+      puts "You hit an enemy ship!"
+    else 
+      @user_shot_board.grid[shot.row][shot.column] = "M"
+      puts "You missed!"
+    end
+  end
+
 end
