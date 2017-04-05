@@ -41,8 +41,9 @@ module Messages
     user_setup(board_size, ships)
   end
 
-  def re_insert_squares
-    puts ""
+  def shot_prompt
+    puts "Pick a target square by letter/number:"
+    shot = Cell.new(gets.chomp)
   end
   
 end
