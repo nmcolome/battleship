@@ -1,8 +1,6 @@
-require './lib/cell.rb'
-require './lib/ship_placement.rb'
+require './lib/6_cell.rb'
 
 class Ships
-  include ShipPlacement
 
   attr_accessor :type, :cell
 
@@ -30,6 +28,10 @@ class Ships
     @cell << cell
   end
 
+  def count
+    @cell.count
+  end
+
   def clear
     @cell = []
   end
@@ -39,15 +41,23 @@ class Ships
   end
 
   def row(cell_idx)
-    letter = @cell[cell_idx].row
-    ALPHA.index(letter)
+    @cell[cell_idx].row
   end
 
   def column(cell_idx)
-    @cell[cell_idx].column.to_i
+    @cell[cell_idx].column
   end
 
   def coordinates(cell_idx)
     @cell[cell_idx].coordinates
   end
+
+  def last_row
+    @cell.last.row
+  end
+  
+  def last_column
+    @cell.last.column
+  end
+  
 end

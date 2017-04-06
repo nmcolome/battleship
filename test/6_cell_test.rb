@@ -1,7 +1,5 @@
 require './test/test_helper'
 require './lib/6_cell.rb'
-require './lib/ship_placement.rb'
-require 'pry'
 
 class CellTest < Minitest::Test
   

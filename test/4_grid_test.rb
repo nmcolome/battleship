@@ -1,5 +1,5 @@
 require './test/test_helper'
-require './lib/grid.rb'
+require './lib/4_grid.rb'
 
 class GridTest < Minitest::Test
   
@@ -25,28 +25,9 @@ class GridTest < Minitest::Test
   
   def test_if_edit_a_specific_cell
     board = Grid.new(10)
-    rowss = board.grid[1]
-    rowss[1] = "x"
-    p board.grid
+    assert_equal " ", board.grid[1][1]
+    
+    board.grid[1][1] = "x"
     assert_equal "x", board.grid[1][1]
   end
-
-#   def test_if_print_the_board_correctly #how to do this
-#     skip
-#     board = Grid.new(8)
-
-#     desired_output = W
-# ===========================
-# *  A  B  C  D  E  F  G  H
-# 1  ^  ^  ^  ^  ^  ^  ^  ^
-# 2  ^  ^  ^  ^  ^  ^  ^  ^
-# 3  ^  ^  ^  ^  ^  ^  ^  ^
-# 4  ^  ^  ^  ^  ^  ^  ^  ^
-# 5  ^  ^  ^  ^  ^  ^  ^  ^
-# 6  ^  ^  ^  ^  ^  ^  ^  ^
-# 7  ^  ^  ^  ^  ^  ^  ^  ^
-# 8  ^  ^  ^  ^  ^  ^  ^  ^
-# ===========================
-#     assert_equal desired_output, board.print_grid
-#   end
 end

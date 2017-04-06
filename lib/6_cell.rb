@@ -1,7 +1,7 @@
-require './lib/ship_placement.rb'
+require './lib/ship_setup.rb'
 
 class Cell
-include ShipPlacement
+  include ShipSetup
 
   attr_reader :row, :column, :coordinates
   

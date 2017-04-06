@@ -38,12 +38,6 @@ module Messages
       puts "The grid is #{board_size}x#{board_size}, it has A1 at the top left and D4 at the bottom right."
     end
     puts
-    user_setup(board_size, ships)
-  end
-
-  def shot_prompt
-    puts "Pick a target square by letter/number:"
-    shot = Cell.new(gets.chomp)
   end
   
 end
