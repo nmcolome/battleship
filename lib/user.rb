@@ -3,6 +3,8 @@ require './lib/messages_module'
 class User
   include Messages
 
+  ABC = ("A".."Z").to_a
+
   def initialize(board_size, number_of_ships)
     @user_arrangement = Board.new(board_size)
     @user_shots = Board.new(board_size)
@@ -12,11 +14,11 @@ class User
 
   def user_placement(board_size, number_of_ships)
     ships = create_ships(number_of_ships)
+    all_coord = []
     ships.each do |ship|
-      ship_placement(ship, board_size)
+      ship_placement(ship, all_coord)
     end
-    @comp_ships = ships
-    validate_coord(board_size, number_of_ships)
+    # @user_ships = ships
   end
 
   def create_ships(number)
@@ -25,75 +27,95 @@ class User
     ships.map { |ship| Ship.new(ship) }
   end
 
-  def ship_placement(ship, board_size)
-    prompt_coordinates(board_size)
+  def ship_placement(ship, all_coord)
+    prompt_coordinates(ship.size)
     coordinates = gets.chomp
-    coordinates.split(" ")
-    ship_head = coordinates[0].split(//)
-    ship_tail = coordinates[1].split(//)
-    validate_coord(ship_head, ship_tail)
+    coord = coordinates.split(" ")
+    ship_head = coord[0].split(//)
+    ship_tail = coord[1].split(//)
+    # ship << [ABC.index(ship_head[0]), ship_head[1].to_i - 1]
+    # ship << [ABC.index(ship_tail[0]), ship_tail[1].to_i - 1]
+    validate_ship_coord(ship_head, ship_tail, ship.size, all_coord)
   end
 
-  def validate_coord(head, tail)
-    position_error if is_position_ok?(head, tail) == false
-    length_error if is_length_ok?(head, tail) == false
-    wrap_error if is_wrapping?(head, tail) == false
-  end
-
-    # overlap_error if overlaps?(head,tail) == false
-
-  # def overlaps?(head, tail)
-    # if horizontal?(head, tail)
-      # size = tail[1] - head[1] + 1
-  # end
-
-  def is_wrapping?(head, tail)
-    columns = (1..size).to_a
-    rows = ("A".."Z").to_a[size-1]
-
-    rows_inside_board(head, tail) && columns_inside_board(head, tail)
-  end
-
-  def rows_inside_board
-    rows.include?(head[0]) && rows.include?(tail[0])
-  end
-
-  def columns_inside_board
-    columns.include?(head[1]) && columns.include?(tail[1])
+  def validate_ship_coord(head, tail, ship_size, all_coord)
+    good_coord = true
+    coord_val = []
+    coord_val << false if is_position_ok?(head, tail) == false
+    coord_val << false if is_length_ok?(head, tail, ship_size) == false
+    coord_val << false if no_wrapping?(head, tail) == false
+    coord_val << false if no_overlap?(head, tail, all_coord) == false
+    good_coord = false if coord_val.any? {|validation| validation == false}
+    good_coord
   end
 
   def is_position_ok?(head, tail)
-    false
-    true if horizontal?(head, tail) || vertical?(head, tail)
-  end
-
-  def is_length_ok?(head, tail)
-    rows = ("A".."Z").to_a[size-1]
-    false
-    true if horizontal_length(head, tail) || vertical_length(head, tail)
+    position = false
+    if horizontal?(head, tail) || vertical?(head, tail)
+      position = true
+    else
+      position_error
+    end
+    position
   end
 
   def horizontal?(head, tail)
     head[0] == tail[0]
   end
 
-  def horizontal_length_ok?(head, tail)
-    tail[1] - head[1] == ship.size - 1
-  end
-
   def vertical?(head, tail)
     head[1] == tail[1]
   end
 
-  def vertical_length_ok?(head, tail)
-    rows.index(tail[0]) - rows.index(head[0]) == ship.size - 1
+  def is_length_ok?(head, tail, ship_size)
+    length = false
+    if horizontal_length(head, tail, ship_size) || vertical_length(head, tail, ship_size)
+      length = true
+    else
+      length_error
+    end
+    length
   end
 
-  def horizontal_length(head, tail)
-    horizontal?(head, tail) && horizontal_length_ok?(head, tail)
+  def horizontal_length(head, tail, ship_size)
+    tail[1] - head[1] == ship_size - 1
   end
 
-  def vertical_length(head, tail)
-    vertical?(head, tail) && vertical_length_ok?(head, tail)
+  def vertical_length(head, tail, ship_size)
+    ABC.index(tail[0]) - ABC.index(head[0]) == ship_size - 1
   end
+
+  def no_wrapping?(head, tail)
+    wrapping = false
+    if rows_inside_board(head, tail) && columns_inside_board(head, tail)
+      wrapping = true
+    else
+      wrap_error
+    end
+    wrapping
+  end
+
+  def rows_inside_board
+    rows = ("A".."Z").to_a[user_arrangement.size-1]
+    rows.include?(head[0]) && rows.include?(tail[0])
+  end
+
+  def columns_inside_board
+    columns = (1..user_arrangement.size).to_a
+    columns.include?(head[1]) && columns.include?(tail[1])
+  end
+
+  def no_overlap?(head, tail, all_coord)
+    all_coord << head
+    all_coord << tail
+
+    overlap = false
+    if all_coord.uniq!.nil?
+      overlap = true
+    else
+      overlap_error
+    end
+    overlap
+  end
+
 end

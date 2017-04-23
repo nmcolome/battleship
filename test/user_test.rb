@@ -6,7 +6,7 @@ require './lib/ship'
 class TestUser < Minitest::Test
 
   def setup
-    @player = User.new(4,2)
+    @player = User.new(4, 2)
   end
 
   def test_it_exists
@@ -14,10 +14,8 @@ class TestUser < Minitest::Test
   end
 
   def test_creation_of_ships
-    @player.create_ships(2)
-
-    assert_equal 2, @player.user_ships.count
-    assert_equal Array, @player.user_ships
-    assert_equal Ship, @player.user_ships.first.class
+    assert_equal 3, @player.create_ships(3).count
+    assert_instance_of Array, @player.create_ships(2)
+    assert_instance_of Ship, @player.create_ships(2).first
   end
 end
