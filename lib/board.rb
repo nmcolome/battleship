@@ -13,7 +13,7 @@ class Board
     (1..size).to_a
   end
 
-  def rows_key(size)
+  def rows_key
     ("A".."Z").to_a
   end
 
@@ -34,7 +34,7 @@ class Board
 
   def print_y_axis
     grid.each_with_index do |row, idx|
-      puts rows_key(size)[idx] + " " + row.join("  ")
+      puts rows_key[idx] + " " + row.join("  ")
     end
   end
 
