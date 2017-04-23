@@ -3,14 +3,23 @@ class Ship
               :size,
               :location
 
-  def initialize(name, size)
+  def initialize(name)
     @name = name
-    @size = size
+    @size = sizes[name]
     @location = []
   end
 
   def << (cell)
     location << cell
+  end
+
+  def sizes
+    {
+      "Destroyer" => 2,
+      "Submarine" => 3,
+      "Battleship" => 4,
+      "Carrier" => 5
+    }
   end
 
 end
