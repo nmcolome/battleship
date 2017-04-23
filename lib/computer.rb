@@ -16,7 +16,7 @@ class Computer
       ship_placement(ship, board_size)
     end
     @comp_ships = ships
-    validate_coord
+    validate_coord(board_size, number_of_ships)
   end
 
   def create_ships(number)
@@ -56,10 +56,10 @@ class Computer
     ship.location.shift
   end
 
-  def validate_coord
+  def validate_coord(board_size, number_of_ships)
     coord = @comp_ships.map { |ship| ship.location }
-    if coord.uniq! != nil
-      ship_placement
+    if coord.flatten(1).uniq! != nil
+      computer_placement(board_size, number_of_ships)
     end
   end
 

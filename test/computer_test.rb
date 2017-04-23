@@ -36,4 +36,9 @@ class TestComputer < Minitest::Test
     assert horizontal || vertical
   end
 
+  def test_validation_of_coordinates
+    destroyer_coord = @comp.comp_ships.first.location
+    submarine_coord = @comp.comp_ships.last.location
+    assert_equal [], destroyer_coord & submarine_coord
+  end
 end
