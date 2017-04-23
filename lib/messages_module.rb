@@ -21,9 +21,9 @@ module Messages
   end
 
   def prompt_user_setup(level)
-    if level = "b"
+    if level == "b"
       puts "I have laid out my ships on the grid. \nYou now need to layout your two ships.\nThe first is two units long and the second is three units long.\nThe grid is 4x4, has A1 at the top left and D4 at the bottom right.\n"
-    elsif level = "i"
+    elsif level == "i"
       puts "I have laid out my ships on the grid. \nYou now need to layout your three ships.\nThe first is two units long, the second is three units long and the third is four units long.\nThe grid is 8x8, has A1 at the top left and H8 at the bottom right.\n"
     elsif
       puts "I have laid out my ships on the grid. \nYou now need to layout your three ships.\nThe first is two units long, the second is three units long, the third is four units long and the fourth is five units long.\nThe grid is 12x12, has A1 at the top left and L12 at the bottom right.\n"
@@ -46,7 +46,7 @@ module Messages
     "Ships cannot wrap around the board"
   end
 
-  def length_erro
+  def length_error
     "Coordinates must correspond to the first and last units of the ship. (IE: You can’t place a two unit ship at “A1 A3”)"
   end
 
