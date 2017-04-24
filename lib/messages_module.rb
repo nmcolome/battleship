@@ -50,4 +50,39 @@ module Messages
     return "Coordinates must correspond to the first and last units of the ship. (IE: You can’t place a two unit ship at “A1 A3”)"
   end
 
+  def prompt_player_shot
+    puts "Please enter the square where you want to shoot (EG “A1”):"
+  end
+
+  def hit_message
+    puts "Your shot hit an enemy ship!"
+  end
+
+  def miss_message
+    puts "Your shot was a Miss"
+  end
+
+  def comp_hit_message
+    puts "You got hit!"
+  end
+
+  def comp_miss_message
+    puts "The enemy missed!"
+  end
+
+  def sink_user(ship)
+    puts "The enemy sunk your #{ship.size}-unit #{ship}"
+  end
+
+  def sink_comp(ship)
+    puts "You sunk the enemy's #{ship.size}-unit #{ship}"
+  end
+
+  def sorry
+    puts "Sorry! You lose!"
+  end
+
+  def congrats
+    puts "Congratulations! You win!"
+  end
 end

@@ -36,15 +36,23 @@ class Battleship
       computer = Computer.new(4, 2)
       prompt_user_setup("b")
       user = User.new(4, 2)
+      user.run_placement(4, 2)
     elsif input == "i" || input == "intermediate"
       computer = Computer.new(8, 3)
       prompt_user_setup("i")
       user = User.new(8, 3)
+      user.run_placement(8, 3)
     elsif input == "a" || input == "advanced"
       computer = Computer.new(12, 4)
       prompt_user_setup("a")
       user = User.new(12, 4)
+      user.run_placement(12, 4)
     end
+    game_flow(computer, user)
+  end
+
+  def game_flow(computer, user)
+    
   end
 
 end
