@@ -3,13 +3,17 @@ require './lib/messages_module'
 class User
   include Messages
 
+  attr_reader :user_arrangement,
+              :user_shots,
+              :user_ships
+
   ABC = ("A".."Z").to_a
 
   def initialize(board_size, number_of_ships)
     @user_arrangement = Board.new(board_size)
     @user_shots = Board.new(board_size)
     @user_ships = []
-    user_placement(board_size, number_of_ships)
+    # user_placement(board_size, number_of_ships)
   end
 
   def user_placement(board_size, number_of_ships)
@@ -44,7 +48,7 @@ class User
     coord_val << false if is_position_ok?(head, tail) == false
     coord_val << false if is_length_ok?(head, tail, ship_size) == false
     coord_val << false if no_wrapping?(head, tail) == false
-    coord_val << false if no_overlap?(head, tail, all_coord) == false
+    coord_val << false if no_overlap?(head, tail, all_coord, ship_size) == false
     good_coord = false if coord_val.any? {|validation| validation == false}
     good_coord
   end
@@ -78,7 +82,7 @@ class User
   end
 
   def horizontal_length(head, tail, ship_size)
-    tail[1] - head[1] == ship_size - 1
+    tail[1].to_i - head[1].to_i == ship_size - 1
   end
 
   def vertical_length(head, tail, ship_size)
@@ -95,19 +99,31 @@ class User
     wrapping
   end
 
-  def rows_inside_board
-    rows = ("A".."Z").to_a[user_arrangement.size-1]
+  def rows_inside_board(head, tail)
+    rows = ABC[0..user_arrangement.size-1]
     rows.include?(head[0]) && rows.include?(tail[0])
   end
 
-  def columns_inside_board
+  def columns_inside_board(head, tail)
     columns = (1..user_arrangement.size).to_a
-    columns.include?(head[1]) && columns.include?(tail[1])
+    columns.include?(head[1].to_i) && columns.include?(tail[1].to_i)
   end
 
-  def no_overlap?(head, tail, all_coord)
-    all_coord << head
-    all_coord << tail
+  def no_overlap?(head, tail, all_coord, ship_size)
+    row = ABC.index(head[0])
+    column = head[1].to_i - 1
+    ship_head = [row, column]
+    all_coord << ship_head
+
+    if horizontal?(head, tail)
+      (ship_size - 1).times do |i|
+        all_coord << [row, column + i + 1]
+      end
+    else
+      (ship_size - 1).times do |i|
+        all_coord << [row + i + 1, column]
+      end
+    end
 
     overlap = false
     if all_coord.uniq!.nil?

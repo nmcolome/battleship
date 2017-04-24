@@ -44,16 +44,16 @@ class Computer
     column = ship.location.first.last
 
     if is_horizontal?
-      (ship.size).times do |i|
-        ship.location << [row, column + i]
+      (ship.size - 1).times do |i|
+        ship.location << [row, column + i + 1]
       end
     else
-      (ship.size).times do |i|
-        ship.location << [row + i, column]
+      (ship.size - 1).times do |i|
+        ship.location << [row + i + 1, column]
       end
     end
 
-    ship.location.shift
+    ship.location
   end
 
   def validate_coord(board_size, number_of_ships)
