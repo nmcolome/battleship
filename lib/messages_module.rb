@@ -54,6 +54,14 @@ module Messages
     puts "Please enter the square where you want to shoot (EG “A1”):"
   end
 
+  def your_shot_board
+    puts "This is your shot board."
+  end
+
+  def your_arrangement_board
+    puts "This is your arrangement board."
+  end
+
   def hit_message
     puts "Your shot hit an enemy ship!"
   end
