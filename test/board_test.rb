@@ -14,12 +14,30 @@ class TestBoard < Minitest::Test
     assert_equal 8, board_game.grid.first.length
   end
 
+  def test_it_prints_borders
+    board_game = Board.new(4)
+    assert_instance_of Array, board_game.border
+
+    expected = "==============="
+    assert_equal expected, board_game.border.join
+  end
+
+  def test_it_prints_x_axis
+    skip
+    board_game = Board.new(4)
+    assert_nil board_game.print_x_axis
+  end
+
+  def test_it_prints_y_axis
+    skip
+    board_game = Board.new(4)
+    assert_instance_of Array, board_game.print_y_axis
+  end
+
   def test_it_prints_grid_with_headers
     board_game = Board.new(4)
 
     output = board_game.print_grid
-    expected = print "===============\n*  1  2  3  4\nA            \nB            \nC            \nD            \n==============="
-
-    assert_equal expected, output
+    assert_nil output
   end
 end
