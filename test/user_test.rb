@@ -39,15 +39,26 @@ class TestUser < Minitest::Test
   end
 
   def test_overlap_validation_of_coordinates
-    assert @player.no_overlap?(["A", "1"], ["A", "2"], [], 2)
-    refute @player.no_overlap?(["A", "1"], ["A", "3"], [[0, 0], [0, 1]], 3)
-    refute @player.no_overlap?(["A", "2"], ["C", "2"], [[1, 1], [1, 2]], 3)
+    assert @player.no_overlap?(["A", "1"], ["A", "2"], 2)
+    refute @player.no_overlap?(["A", "1"], ["A", "3"], 3)
+    refute @player.no_overlap?(["A", "2"], ["C", "2"], 3)
   end
 
   def test_all_validations
-    assert @player.validate_ship_coord(["B", "2"], ["B", "3"], 2, [])
-    refute @player.validate_ship_coord(["A", "2"], ["C", "2"], 3, [[1, 1], [1, 2]])
-    assert @player.validate_ship_coord(["A", "1"], ["C", "1"], 3, [[1, 1], [1, 2]])
+    assert @player.validate_ship_coord(["B", "2"], ["B", "3"], 2)
+    refute @player.validate_ship_coord(["A", "2"], ["C", "2"], 3)
+    assert @player.validate_ship_coord(["A", "1"], ["C", "1"], 3)
+  end
+
+  def test_format_validate_coordinates
+    destroyer = Ship.new("Destroyer")
+    submarine = Ship.new("Submarine")
+    @player.format_validate_coordinates(destroyer, "A1 A2")
+
+    assert_equal [[0,0], [0,1]], @player.user_ships.first.location
+
+    @player.format_validate_coordinates(submarine, "B1 B3")
+    assert_equal [[1,0], [1,1], [1,2]], @player.user_ships.last.location
   end
 
 end

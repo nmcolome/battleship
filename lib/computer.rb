@@ -1,4 +1,7 @@
+require './lib/placement_module'
+
 class Computer
+  include Placement
   attr_reader :comp_arrangement,
               :comp_shots,
               :comp_ships,
@@ -9,28 +12,27 @@ class Computer
     @comp_shots = Board.new(board_size)
     @comp_ships = []
     @all_coord = []
-    computer_placement(board_size, number_of_ships)
+    run_placement(board_size, number_of_ships)
   end
 
-  def computer_placement(board_size, number_of_ships)
-    ships = create_ships(number_of_ships)
-    ships.each do |ship|
-      ship_placement(ship, board_size)
-    end
-  end
+  # def run_placement(board_size, number_of_ships)
+  #   ships = create_ships(number_of_ships)
+  #   ships.each do |ship|
+  #     ship_placement(ship, board_size)
+  #   end
+  # end
 
-  def create_ships(number)
-    ships = ["Destroyer", "Submarine", "Battleship", "Carrier"]
-    ships = ships[0..number - 1]
-    ships.map { |ship| Ship.new(ship) }
-  end
+  # def create_ships(number)
+  #   ships = ["Destroyer", "Submarine", "Battleship", "Carrier"]
+  #   ships = ships[0..number - 1]
+  #   ships.map { |ship| Ship.new(ship) }
+  # end
 
   def ship_placement(ship, board_size)
     ship_head = assign_ship_head(ship, board_size)
     ship << ship_head
     assign_full_coordinates(ship)
     validate_coord(ship, board_size)
-    # binding.pry
   end
 
   def assign_ship_head(ship, board_size)

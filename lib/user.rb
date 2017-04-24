@@ -1,11 +1,14 @@
 require './lib/messages_module'
+require './lib/placement_module'
 
 class User
   include Messages
+  include Placement
 
   attr_reader :user_arrangement,
               :user_shots,
-              :user_ships
+              :user_ships,
+              :all_coord
 
   ABC = ("A".."Z").to_a
 
@@ -13,42 +16,49 @@ class User
     @user_arrangement = Board.new(board_size)
     @user_shots = Board.new(board_size)
     @user_ships = []
-    user_placement(board_size, number_of_ships)
+    @all_coord = []
+    # run_placement(board_size, number_of_ships)
   end
 
-  def user_placement(board_size, number_of_ships)
-    ships = create_ships(number_of_ships)
-    all_coord = []
-    ships.each do |ship|
-      ship_placement(ship, all_coord)
-    end
-    @user_ships = ships
-  end
+  # def run_placement(board_size, number_of_ships)
+  #   ships = create_ships(number_of_ships)
+  #   ships.each do |ship|
+  #     ship_placement(ship)
+  #   end
+  # end
 
-  def create_ships(number)
-    ships = ["Destroyer", "Submarine", "Battleship", "Carrier"]
-    ships = ships[0..number - 1]
-    ships.map { |ship| Ship.new(ship) }
-  end
+  # def create_ships(number)
+  #   ships = ["Destroyer", "Submarine", "Battleship", "Carrier"]
+  #   ships = ships[0..number - 1]
+  #   ships.map { |ship| Ship.new(ship) }
+  # end
 
-  def ship_placement(ship, all_coord)
+  def ship_placement(ship)
     prompt_coordinates(ship.size)
     coordinates = gets.chomp
+    format_validate_coordinates(ship, coordinates)
+  end
+
+  def format_validate_coordinates(ship, coordinates)
     coord = coordinates.split(" ")
     ship_head = coord[0].split(//)
     ship_tail = coord[1].split(//)
-    # ship << [ABC.index(ship_head[0]), ship_head[1].to_i - 1]
-    # ship << [ABC.index(ship_tail[0]), ship_tail[1].to_i - 1]
-    validate_ship_coord(ship_head, ship_tail, ship.size, all_coord)
+    if validate_ship_coord(ship_head, ship_tail, ship.size)
+      ship << [ABC.index(ship_head[0]), ship_head[1].to_i - 1]
+      ship << [ABC.index(ship_tail[0]), ship_tail[1].to_i - 1]
+      @user_ships << ship
+    else
+      ship_placement(ship)
+    end
   end
 
-  def validate_ship_coord(head, tail, ship_size, all_coord)
+  def validate_ship_coord(head, tail, ship_size)
     good_coord = true
     coord_val = []
     coord_val << false if is_position_ok?(head, tail) == false
     coord_val << false if is_length_ok?(head, tail, ship_size) == false
     coord_val << false if no_wrapping?(head, tail) == false
-    coord_val << false if no_overlap?(head, tail, all_coord, ship_size) == false
+    coord_val << false if no_overlap?(head, tail, ship_size) == false
     good_coord = false if coord_val.any? {|validation| validation == false}
     good_coord
   end
@@ -109,7 +119,7 @@ class User
     columns.include?(head[1].to_i) && columns.include?(tail[1].to_i)
   end
 
-  def no_overlap?(head, tail, all_coord, ship_size)
+  def no_overlap?(head, tail, ship_size)
     row = ABC.index(head[0])
     column = head[1].to_i - 1
     ship_head = [row, column]
