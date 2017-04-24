@@ -28,4 +28,17 @@ class TestShip < Minitest::Test
     assert_equal [], @sub.location
   end
 
+  def test_reset_location_value
+    ship_head = [0,0]
+    ship_tail = [0,1]
+
+    @sub << ship_head
+
+    @sub.reset
+    assert @sub.location.empty?
+
+    @sub << ship_tail
+    assert_equal [0,1], @sub.location.first
+  end
+
 end

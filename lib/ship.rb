@@ -13,6 +13,10 @@ class Ship
     location << cell
   end
 
+  def reset
+    @location = []
+  end
+
   def sizes
     {
       "Destroyer" => 2,
