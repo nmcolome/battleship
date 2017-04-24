@@ -46,6 +46,8 @@ class TestUser < Minitest::Test
 
   def test_all_validations
     assert @player.validate_ship_coord(["B", "2"], ["B", "3"], 2, [])
-    refute @player.validate_ship_coord(["B", "2"], ["B", "3"], 3, [[1, 1], [1, 2]])
+    refute @player.validate_ship_coord(["A", "2"], ["C", "2"], 3, [[1, 1], [1, 2]])
+    assert @player.validate_ship_coord(["A", "1"], ["C", "1"], 3, [[1, 1], [1, 2]])
   end
+
 end

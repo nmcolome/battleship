@@ -13,7 +13,7 @@ class User
     @user_arrangement = Board.new(board_size)
     @user_shots = Board.new(board_size)
     @user_ships = []
-    # user_placement(board_size, number_of_ships)
+    user_placement(board_size, number_of_ships)
   end
 
   def user_placement(board_size, number_of_ships)
@@ -22,7 +22,7 @@ class User
     ships.each do |ship|
       ship_placement(ship, all_coord)
     end
-    # @user_ships = ships
+    @user_ships = ships
   end
 
   def create_ships(number)
