@@ -13,12 +13,6 @@ class TestComputer < Minitest::Test
     assert_instance_of Computer, @comp
   end
 
-  def test_computer_placement
-    assert_equal 2, @comp.comp_ships.count
-    assert_instance_of Array, @comp.comp_ships
-    refute @comp.comp_ships.first.location.empty?
-  end
-
   def test_creation_of_ships
     assert_equal 3, @comp.create_ships(3).count
     assert_instance_of Ship, @comp.create_ships(3).first
@@ -27,8 +21,8 @@ class TestComputer < Minitest::Test
 
   def test_assignment_of_coordinates
     submarine = Ship.new("Submarine")
-    submarine << [0, 0]
-    @comp.assign_coordinates(submarine)
+    submarine.location << [0, 0]
+    @comp.assign_full_coordinates(submarine)
 
     assert_equal 3, submarine.location.count
     horizontal = [[0, 0], [0, 1], [0, 2]] == submarine.location
@@ -37,8 +31,26 @@ class TestComputer < Minitest::Test
   end
 
   def test_validation_of_coordinates
-    destroyer_coord = @comp.comp_ships.first.location
-    submarine_coord = @comp.comp_ships.last.location
-    assert_equal [], destroyer_coord & submarine_coord
+    # destroyer = Ship.new("Destroyer")
+    # destroyer.location << [1, 0]
+    # binding.pry
+    # @comp.assign_full_coordinates(destroyer)
+    # @comp.validate_coord(destroyer, 4)
+
+    # assert_equal @comp.comp_ships.first.location, destroyer.location
+
+    # submarine = Ship.new("Submarine")
+    # submarine.location << [1, 0]
+    # @comp.assign_full_coordinates(submarine)
+    # @comp.validate_coord(submarine, 4)
+
+    # assert_equal submarine, @comp.comp_ships.last
+    assert_equal [], @comp.comp_ships.first.location & @comp.comp_ships.last.location
+  end
+
+  def test_computer_placement
+    assert_equal 2, @comp.comp_ships.count
+    assert_instance_of Array, @comp.comp_ships
+    refute @comp.comp_ships.first.location.empty?
   end
 end
