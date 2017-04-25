@@ -33,19 +33,19 @@ class Battleship
 
   def game_setup(input)
     if input == "b" || input == "beginner"
-      computer = Computer.new(4, 2)
+      @computer = Computer.new(4, 2)
       prompt_user_setup("b")
-      user = User.new(4, 2)
+      @user = User.new(4, 2)
       user.run_placement(4, 2)
     elsif input == "i" || input == "intermediate"
-      computer = Computer.new(8, 3)
+      @computer = Computer.new(8, 3)
       prompt_user_setup("i")
-      user = User.new(8, 3)
+      @user = User.new(8, 3)
       user.run_placement(8, 3)
     elsif input == "a" || input == "advanced"
-      computer = Computer.new(12, 4)
+      @computer = Computer.new(12, 4)
       prompt_user_setup("a")
-      user = User.new(12, 4)
+      @user = User.new(12, 4)
       user.run_placement(12, 4)
     end
     game_flow(computer, user)
@@ -53,10 +53,17 @@ class Battleship
 
   def game_flow(computer, user)
     your_arrangement_board
-    user.user_arrangement
+    user.user_arrangement.print_grid
     your_shot_board
     user.user_shots.print_grid
     user.shoot
+    check_computer_board(computer, user)
+    computer.shoot
+    check_user_board(computer, user)
+    #do this as a loop
+  end
+
+  def check_computer_board(computer, user)
     if computer.all_coord.flatten(1).include?(user.shots.last)
       user.update_shot_board("H", shot)
       computer.comp_ships.each do |ship|
@@ -75,9 +82,18 @@ class Battleship
       user.update_shot_board("M", shot)
       miss_message
     end
-    computer.shoot
+    user.user_shots.print_grid
+    end_turn
+    enter = gets.chomp
+  end
+
+  def method_name
+    
+  end
+
+  def check_user_board(computer, user)
     if user.all_coord.flatten(1).include?(computer.shots.last)
-      computer.update_shot_board("H", shot)
+      user.update_arrangement_board("H", shot)
       user.user_ships.each do |ship|
         if ship.location.include?(shot)
           if (ship.location & computer.shots).count == ship.size
@@ -91,9 +107,9 @@ class Battleship
       user_status = user.user_ships.map { |ship| ship.status }
       sorry if user_status.all? {|stat| stat == "sunk"}
     else
+      user.update_arrangement_board("M", shot)
       comp_miss_message
     end
-    #do this as a loop
   end
 
 end

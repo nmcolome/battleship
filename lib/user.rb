@@ -173,13 +173,14 @@ class User
     prompt_player_shot
     input = gets.chomp
     shot = [ABC.index(input[0].upcase), input[1].to_i - 1]
-    @shots << shot
     validate_shot(shot)
   end
 
   def validate_shot(shot)
-    if !inside_board?(shot) && is_repeated?(shot)
-      @shots.pop
+    if inside_board?(shot) && !is_repeated?(shot)
+      @shots << shot
+    else
+      shot_error
       shoot
     end
   end
@@ -195,5 +196,9 @@ class User
 
   def update_shot_board(letter, shot)
     user_shots.grid[shot.first][shot.last] = letter
+  end
+
+  def update_arrangement_board(letter, shot)
+    user_arrangement.grid[shot.first][shot.last] = letter
   end
 end

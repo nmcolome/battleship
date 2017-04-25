@@ -1,5 +1,7 @@
 module Messages
 
+  ABC = ("A".."Z").to_a
+
   def welcome
     puts "Welcome to BATTLESHIP\n"
   end
@@ -51,7 +53,7 @@ module Messages
   end
 
   def prompt_player_shot
-    puts "Please enter the square where you want to shoot (EG “A1”):"
+    puts "Please enter the square where you want to shoot (eg. “A1”):"
   end
 
   def your_shot_board
@@ -62,6 +64,10 @@ module Messages
     puts "This is your arrangement board."
   end
 
+  def shot_error
+    puts "The shot must be a valid coordinate within the board and must not have already fired in that position"
+  end
+
   def hit_message
     puts "Your shot hit an enemy ship!"
   end
@@ -70,12 +76,12 @@ module Messages
     puts "Your shot was a Miss"
   end
 
-  def comp_hit_message
-    puts "You got hit!"
+  def comp_hit_message(shot)
+    puts "The enemy fired at #{ABC[shot[0]], shot[1] + 1}. You got hit!"
   end
 
-  def comp_miss_message
-    puts "The enemy missed!"
+  def comp_miss_message(shot)
+    puts "The enemy fired at #{ABC[shot[0]], shot[1] + 1}. The enemy missed!"
   end
 
   def sink_user(ship)
@@ -92,5 +98,9 @@ module Messages
 
   def congrats
     puts "Congratulations! You win!"
+  end
+
+  def end_turn
+    puts "Please end your turn by pressing ENTER"
   end
 end
