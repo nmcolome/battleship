@@ -89,22 +89,22 @@ module Messages
   end
 
   def sink_user(ship)
-    puts "The enemy sunk your #{ship.size}-unit #{ship}"
+    puts "The enemy sunk your #{ship.size}-unit #{ship.name}"
   end
 
   def sink_comp(ship)
-    puts "You sunk the enemy's #{ship.size}-unit #{ship}"
+    puts "You sunk the enemy's #{ship.size}-unit #{ship.name}"
   end
 
-  def sorry
-    puts "Sorry! You lose!"
+  def sorry(computer, elapsed_time)
+    puts "Sorry! You lose!\nYou played for #{elapsed_time} and it took your enemy #{@computer.shots.count} shots to beat you."
   end
 
-  def congrats
-    puts "Congratulations! You win!"
+  def congrats(user, elapsed_time)
+    puts "Congratulations! You win!\nYou played for #{elapsed_time} and it took you #{@user.shots.count} shots to beat your enemy."
   end
 
   def end_turn
-    puts "Please end your turn by pressing ENTER"
+    puts "Press ENTER to continue"
   end
 end

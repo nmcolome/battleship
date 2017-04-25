@@ -1,9 +1,17 @@
 require './lib/messages_module'
+require './lib/computer'
+require './lib/user'
+require './lib/board'
+require './lib/ship'
 
 class Battleship
   include Messages
 
+  attr_reader :start_time,
+              :computer
+
   def start
+    @start_time = Time.now
     welcome
     request_input
   end
@@ -36,80 +44,104 @@ class Battleship
       @computer = Computer.new(4, 2)
       prompt_user_setup("b")
       @user = User.new(4, 2)
-      user.run_placement(4, 2)
+      @user.run_placement(4, 2)
     elsif input == "i" || input == "intermediate"
       @computer = Computer.new(8, 3)
       prompt_user_setup("i")
       @user = User.new(8, 3)
-      user.run_placement(8, 3)
+      @user.run_placement(8, 3)
     elsif input == "a" || input == "advanced"
       @computer = Computer.new(12, 4)
       prompt_user_setup("a")
       @user = User.new(12, 4)
-      user.run_placement(12, 4)
+      @user.run_placement(12, 4)
     end
-    game_flow(computer, user)
-  end
-
-  def game_flow
     your_arrangement_board
-    user.user_arrangement.print_grid
+    @user.show_arrangement
     your_shot_board
-    user.user_shots.print_grid
-    user.shoot
-    check_enemy_board(user, computer)
-    computer.shoot
-    check_enemy_board(computer, user)
+    run_game
   end
 
-  def game_over
+  def user_flow
+    @user.user_shots.print_grid
+    @user.shoot
+    check_enemy_board(@user, @computer)
+  end
+
+  def comp_flow
+    @computer.shoot
+    check_enemy_board(@computer, @user)
+    @user.user_arrangement.print_grid
+  end
+
+  def run_game
     @is_over = false
-    while is_over == false
-      game_flow
-      check_if_over
+    while @is_over == false
+      user_flow
+      break if enemy_status(@computer)
+      comp_flow
+      break if enemy_status(@user)
     end
   end
 
-  def check_if_over
-    user_status = get_status(user)
-    comp_status = get_status(computer)
-    @is_over = true if check_dead(user_status) || check_dead(comp_status)
-  end
-
-  def check_dead(player)
+  def check_dead(player_status)
     player_status.all? {|stat| stat == "sunk"}
-  end
-
-  def enemy_status(enemy)
-    status = get_status(enemy)
-    if enemy == computer
-      congrats if status.all? {|stat| stat == "sunk"}
-    else
-      sorry if status.all? {|stat| stat == "sunk"}
-    end
   end
 
   def get_status(enemy)
     enemy.ships.map { |ship| ship.status }
   end
 
+  def elapsed_time
+    end_time = Time.now
+    time = end_time - start_time
+    format_time(time)
+  end
+
+  def format_time(time)
+    m = time / 60
+    s = time % 60
+    if m > 60
+      h = m / 60
+      m = m % 60
+      "#{h.to_i}:#{m.to_i}:#{s.to_i} hour"
+    end
+    "#{m.to_i}:#{s.to_i} minutes"
+  end
+
+  def enemy_status(enemy)
+    enemy_status = get_status(enemy)
+    if enemy == @computer
+      if check_dead(enemy_status)
+        congrats(@user, elapsed_time)
+        @is_over = true
+      end
+    else
+      if check_dead(enemy_status)
+        sorry(@computer, elapsed_time)
+        @is_over = true
+      end
+    end
+  end
 
   def check_enemy_board(player, enemy)
     if enemy_got_hit?(player, enemy)
       update_board(player)
       check_if_hit_or_sink(player, enemy)
-      enemy_status(enemy)
+      prompt_if_user(player)
+      end_turn
+      enter = gets
     else
       player_misses(player)
       prompt_if_user(player)
+      end_turn
+      enter = gets
     end
   end
 
   def prompt_if_user(player)
     if player == @user
-      user.user_shots.print_grid
-      end_turn
-      enter = gets.chomp
+      @user.user_shots.print_grid
     end
   end
 
@@ -118,45 +150,32 @@ class Battleship
   end
 
   def update_board(player)
-    if player == computer
-      user.update_arrangement_board("H", player.shots.last)
+    if player == @computer
+      @user.update_arrangement_board("H", player.shots.last)
     else
-      user.update_shot_board("H", player.shots.last)
+      @user.update_shot_board("H", player.shots.last)
     end
-  end
-
-  def enemy_status(enemy)
-    status = get_status(enemy)
-    if enemy == computer
-      congrats if status.all? {|stat| stat == "sunk"}
-    else
-      sorry if status.all? {|stat| stat == "sunk"}
-    end
-  end
-
-  def get_status(enemy)
-    enemy.ships.map { |ship| ship.status }
   end
 
   def check_if_hit_or_sink(player, enemy)
     enemy.ships.each do |ship|
       if ship.location.include?(player.shots.last)
-        hit_or_sink_message(player, enemy)
+        hit_or_sink_message(ship, player, enemy)
       end
     end
   end
 
-  def hit_or_sink_message(player, enemy)
+  def hit_or_sink_message(ship, player, enemy)
     if (ship.location & player.shots).count == ship.size
       ship.status = "sunk"
-      sink_message(enemy)
+      sink_message(ship, enemy)
     else
       hit_message(enemy)
     end
   end
 
-  def sink_message(enemy)
-    if enemy == computer
+  def sink_message(ship, enemy)
+    if enemy == @computer
       sink_comp(ship)
     else
       sink_user(ship)
@@ -164,19 +183,19 @@ class Battleship
   end
 
   def hit_message(enemy)
-    if enemy == computer
+    if enemy == @computer
       user_hit_message
     else
-      comp_hit_message
+      comp_hit_message(@computer.shots.last)
     end
   end
 
   def player_misses(player)
-    if player == computer
-      user.update_arrangement_board("M", computer.shots.last)
-      comp_miss_message
+    if player == @computer
+      @user.update_arrangement_board("M", @computer.shots.last)
+      comp_miss_message(@computer.shots.last)
     else
-      user.update_shot_board("M", user.shots.last)
+      @user.update_shot_board("M", @user.shots.last)
       miss_message
     end
   end
