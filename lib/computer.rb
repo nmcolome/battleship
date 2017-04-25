@@ -5,13 +5,15 @@ class Computer
   attr_reader :comp_arrangement,
               :comp_shots,
               :comp_ships,
-              :all_coord
+              :all_coord,
+              :shots
 
   def initialize(board_size, number_of_ships)
     @comp_arrangement = Board.new(board_size)
     @comp_shots = Board.new(board_size)
     @comp_ships = []
     @all_coord = []
+    @shots = []
     run_placement(board_size, number_of_ships)
   end
 
@@ -77,6 +79,21 @@ class Computer
       @all_coord.delete_at(-1)
       ship.reset
       ship_placement(ship, board_size)
+    end
+  end
+
+  def shoot
+    limit = rand(comp_shots.size)
+    shot = [rand(limit), rand(limit)]
+    validate_shot(shot)
+  end
+
+  def validate_shot(shot)
+    if @shots.include?(shot)
+      shoot
+    else
+      @shots << shot
+      shot
     end
   end
 

@@ -25,11 +25,11 @@ class Board
   end
 
   def border
-    borders = Array.new(size + 1, "===")
+    borders = Array.new(size, "===")
   end
 
   def print_x_axis
-    puts "*  " + columns_key(size).join("  ")
+    puts "* " + columns_key(size).join("  ")
   end
 
   def print_y_axis

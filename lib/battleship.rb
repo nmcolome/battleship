@@ -52,7 +52,48 @@ class Battleship
   end
 
   def game_flow(computer, user)
-    
+    your_arrangement_board
+    user.user_arrangement
+    your_shot_board
+    user.user_shots.print_grid
+    user.shoot
+    if computer.all_coord.flatten(1).include?(user.shots.last)
+      user.update_shot_board("H", shot)
+      computer.comp_ships.each do |ship|
+        if ship.location.include?(shot)
+          if (ship.location & user.shots).count == ship.size
+            ship.status = "sunk"
+            sink_comp(ship)
+          else
+            hit_message
+          end
+        end
+      end
+      comp_status = computer.comp_ships.map { |ship| ship.status }
+      congrats if comp_status.all? {|stat| stat == "sunk"}
+    else
+      user.update_shot_board("M", shot)
+      miss_message
+    end
+    computer.shoot
+    if user.all_coord.flatten(1).include?(computer.shots.last)
+      computer.update_shot_board("H", shot)
+      user.user_ships.each do |ship|
+        if ship.location.include?(shot)
+          if (ship.location & computer.shots).count == ship.size
+            ship.status = "sunk"
+            sink_user(ship)
+          else
+            comp_hit_message
+          end
+        end
+      end
+      user_status = user.user_ships.map { |ship| ship.status }
+      sorry if user_status.all? {|stat| stat == "sunk"}
+    else
+      comp_miss_message
+    end
+    #do this as a loop
   end
 
 end

@@ -8,7 +8,8 @@ class User
   attr_reader :user_arrangement,
               :user_shots,
               :user_ships,
-              :all_coord
+              :all_coord,
+              :shots
 
   ABC = ("A".."Z").to_a
 
@@ -17,6 +18,7 @@ class User
     @user_shots = Board.new(board_size)
     @user_ships = []
     @all_coord = []
+    @shots = []
     # run_placement(board_size, number_of_ships)
   end
 
@@ -151,4 +153,47 @@ class User
     overlap
   end
 
+  def show_arrangement
+    @user_ships.each do |ship|
+      if ship.location.first[0] == ship.location.last[0]
+        ship.location.each do |coord|
+      # binding.pry
+          user_arrangement.grid[coord.first][coord.last] = ">"
+        end
+      else
+        ship.location.each do |coord|
+          user_arrangement.grid[coord.first][coord.last] = "v"
+        end
+      end
+    end
+    user_arrangement.print_grid
+  end
+
+  def shoot
+    prompt_player_shot
+    input = gets.chomp
+    shot = [ABC.index(input[0].upcase), input[1].to_i - 1]
+    @shots << shot
+    validate_shot(shot)
+  end
+
+  def validate_shot(shot)
+    if !inside_board?(shot) && is_repeated?(shot)
+      @shots.pop
+      shoot
+    end
+  end
+
+  def inside_board?(shot)
+    size = (0..user_shots.size-1).to_a
+    size.include?(shot[0]) && size.include?(shot[1])
+  end
+
+  def is_repeated?(shot)
+    @shots.include?(shot)
+  end
+
+  def update_shot_board(letter, shot)
+    user_shots.grid[shot.first][shot.last] = letter
+  end
 end

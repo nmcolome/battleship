@@ -7,6 +7,7 @@ class Ship
     @name = name
     @size = sizes[name]
     @location = []
+    @status = "alive"
   end
 
   def << (cell)

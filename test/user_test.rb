@@ -52,14 +52,30 @@ class TestUser < Minitest::Test
   end
 
   def test_format_validate_coordinates
-    destroyer = Ship.new("Destroyer")
-    submarine = Ship.new("Submarine")
-    @player.format_validate_coordinates(destroyer, "a1 a2")
+    @player.format_validate_coordinates(@destroyer, "a1 a2")
 
     assert_equal [[0, 0], [0, 1]], @player.user_ships.first.location
 
-    @player.format_validate_coordinates(submarine, "B1 D1")
+    @player.format_validate_coordinates(@submarine, "B1 D1")
     assert_equal [[1, 0], [2, 0], [3, 0]], @player.user_ships.last.location
   end
 
+  def test_show_arrangement
+    @destroyer << [0,0]
+    @destroyer << [0,1]
+
+    @submarine << [0,3]
+    @submarine << [1,3]
+    @submarine << [2,3]
+
+    @player.user_ships << @destroyer
+    @player.user_ships << @submarine
+
+    assert_nil @player.show_arrangement
+  end
+
+  def test_shot_validation
+    output = @player.validate_shot("A1")
+    assert_nil output
+  end
 end
