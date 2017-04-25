@@ -18,7 +18,7 @@ class TestBoard < Minitest::Test
     board_game = Board.new(4)
     assert_instance_of Array, board_game.border
 
-    expected = "==============="
+    expected = "============"
     assert_equal expected, board_game.border.join
   end
 

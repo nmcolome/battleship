@@ -31,26 +31,31 @@ class TestComputer < Minitest::Test
   end
 
   def test_validation_of_coordinates
-    # destroyer = Ship.new("Destroyer")
-    # destroyer.location << [1, 0]
-    # binding.pry
-    # @comp.assign_full_coordinates(destroyer)
-    # @comp.validate_coord(destroyer, 4)
-
-    # assert_equal @comp.comp_ships.first.location, destroyer.location
-
-    # submarine = Ship.new("Submarine")
-    # submarine.location << [1, 0]
-    # @comp.assign_full_coordinates(submarine)
-    # @comp.validate_coord(submarine, 4)
-
-    # assert_equal submarine, @comp.comp_ships.last
-    assert_equal [], @comp.comp_ships.first.location & @comp.comp_ships.last.location
+    assert_equal [], @comp.ships.first.location & @comp.ships.last.location
   end
 
   def test_computer_placement
-    assert_equal 2, @comp.comp_ships.count
-    assert_instance_of Array, @comp.comp_ships
-    refute @comp.comp_ships.first.location.empty?
+    assert_equal 2, @comp.ships.count
+    assert_instance_of Array, @comp.ships
+    refute @comp.ships.first.location.empty?
+  end
+
+  def test_comp_shoot_is_within_board
+    @comp.shoot
+    shot = @comp.shots.first
+    output = @comp.comp_shots.grid.at(shot[0]).at(shot[1])
+
+    assert_equal " ", output
+  end
+
+  def test_shots_are_all_different
+    @comp.shoot
+    @comp.shoot
+    @comp.shoot
+    @comp.shoot
+    @comp.shoot
+    @comp.shoot
+
+    assert_nil @comp.shots.uniq!
   end
 end

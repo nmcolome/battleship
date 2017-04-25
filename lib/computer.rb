@@ -17,19 +17,6 @@ class Computer
     run_placement(board_size, number_of_ships)
   end
 
-  # def run_placement(board_size, number_of_ships)
-  #   ships = create_ships(number_of_ships)
-  #   ships.each do |ship|
-  #     ship_placement(ship, board_size)
-  #   end
-  # end
-
-  # def create_ships(number)
-  #   ships = ["Destroyer", "Submarine", "Battleship", "Carrier"]
-  #   ships = ships[0..number - 1]
-  #   ships.map { |ship| Ship.new(ship) }
-  # end
-
   def ship_placement(ship, board_size)
     ship_head = assign_ship_head(ship, board_size)
     ship << ship_head
@@ -84,7 +71,7 @@ class Computer
 
   def shoot
     limit = rand(comp_shots.size)
-    shot = [rand(limit), rand(limit)]
+    shot = [rand(limit).to_i, rand(limit).to_i]
     validate_shot(shot)
   end
 
