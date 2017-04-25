@@ -7,7 +7,7 @@ class User
 
   attr_reader :user_arrangement,
               :user_shots,
-              :user_ships,
+              :ships,
               :all_coord,
               :shots
 
@@ -16,7 +16,7 @@ class User
   def initialize(board_size, number_of_ships)
     @user_arrangement = Board.new(board_size)
     @user_shots = Board.new(board_size)
-    @user_ships = []
+    @ships = []
     @all_coord = []
     @shots = []
     # run_placement(board_size, number_of_ships)
@@ -47,7 +47,7 @@ class User
     ship_tail = coord[1].split(//)
     assign_mid_coordinates(ship, ship_head, ship_tail)
     if validate_ship_coord(ship_head, ship_tail, ship)
-      @user_ships << ship
+      @ships << ship
     else
       ship.reset
       ship_placement(ship)
@@ -154,7 +154,7 @@ class User
   end
 
   def show_arrangement
-    @user_ships.each do |ship|
+    @ships.each do |ship|
       if ship.location.first[0] == ship.location.last[0]
         ship.location.each do |coord|
       # binding.pry
@@ -177,11 +177,19 @@ class User
   end
 
   def validate_shot(shot)
-    if inside_board?(shot) && !is_repeated?(shot)
+    if inside_board?(shot) && is_new?(shot)
       @shots << shot
     else
-      shot_error
+      error_messages(shot)
       shoot
+    end
+  end
+
+  def error_messages(shot)
+    if inside_board?(shot) == false
+      shot_board_error
+    else
+      repeated_shot_error
     end
   end
 
@@ -190,8 +198,8 @@ class User
     size.include?(shot[0]) && size.include?(shot[1])
   end
 
-  def is_repeated?(shot)
-    @shots.include?(shot)
+  def is_new?(shot)
+    !@shots.include?(shot)
   end
 
   def update_shot_board(letter, shot)

@@ -64,11 +64,15 @@ module Messages
     puts "This is your arrangement board."
   end
 
-  def shot_error
-    puts "The shot must be a valid coordinate within the board and must not have already fired in that position"
+  def shot_board_error
+    puts "The shot must be a valid coordinate within the board"
   end
 
-  def hit_message
+  def repeated_shot_error
+    puts "Choose a coordinate where you have not fired already"
+  end
+
+  def user_hit_message
     puts "Your shot hit an enemy ship!"
   end
 
@@ -77,11 +81,11 @@ module Messages
   end
 
   def comp_hit_message(shot)
-    puts "The enemy fired at #{ABC[shot[0]], shot[1] + 1}. You got hit!"
+    puts "The enemy fired at #{ABC[shot[0]]}#{shot[1] + 1}. You got hit!"
   end
 
   def comp_miss_message(shot)
-    puts "The enemy fired at #{ABC[shot[0]], shot[1] + 1}. The enemy missed!"
+    puts "The enemy fired at #{ABC[shot[0]]}#{shot[1] + 1}. The enemy missed!"
   end
 
   def sink_user(ship)

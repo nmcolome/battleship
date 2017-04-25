@@ -51,64 +51,133 @@ class Battleship
     game_flow(computer, user)
   end
 
-  def game_flow(computer, user)
+  def game_flow
     your_arrangement_board
     user.user_arrangement.print_grid
     your_shot_board
     user.user_shots.print_grid
     user.shoot
-    check_computer_board(computer, user)
+    check_enemy_board(user, computer)
     computer.shoot
-    check_user_board(computer, user)
-    #do this as a loop
+    check_enemy_board(computer, user)
   end
 
-  def check_computer_board(computer, user)
-    if computer.all_coord.flatten(1).include?(user.shots.last)
-      user.update_shot_board("H", shot)
-      computer.comp_ships.each do |ship|
-        if ship.location.include?(shot)
-          if (ship.location & user.shots).count == ship.size
-            ship.status = "sunk"
-            sink_comp(ship)
-          else
-            hit_message
-          end
-        end
-      end
-      comp_status = computer.comp_ships.map { |ship| ship.status }
-      congrats if comp_status.all? {|stat| stat == "sunk"}
-    else
-      user.update_shot_board("M", shot)
-      miss_message
+  def game_over
+    @is_over = false
+    while is_over == false
+      game_flow
+      check_if_over
     end
-    user.user_shots.print_grid
-    end_turn
-    enter = gets.chomp
   end
 
-  def method_name
-    
+  def check_if_over
+    user_status = get_status(user)
+    comp_status = get_status(computer)
+    @is_over = true if check_dead(user_status) || check_dead(comp_status)
   end
 
-  def check_user_board(computer, user)
-    if user.all_coord.flatten(1).include?(computer.shots.last)
-      user.update_arrangement_board("H", shot)
-      user.user_ships.each do |ship|
-        if ship.location.include?(shot)
-          if (ship.location & computer.shots).count == ship.size
-            ship.status = "sunk"
-            sink_user(ship)
-          else
-            comp_hit_message
-          end
-        end
-      end
-      user_status = user.user_ships.map { |ship| ship.status }
-      sorry if user_status.all? {|stat| stat == "sunk"}
+  def check_dead(player)
+    player_status.all? {|stat| stat == "sunk"}
+  end
+
+  def enemy_status(enemy)
+    status = get_status(enemy)
+    if enemy == computer
+      congrats if status.all? {|stat| stat == "sunk"}
     else
-      user.update_arrangement_board("M", shot)
+      sorry if status.all? {|stat| stat == "sunk"}
+    end
+  end
+
+  def get_status(enemy)
+    enemy.ships.map { |ship| ship.status }
+  end
+
+
+  def check_enemy_board(player, enemy)
+    if enemy_got_hit?(player, enemy)
+      update_board(player)
+      check_if_hit_or_sink(player, enemy)
+      enemy_status(enemy)
+    else
+      player_misses(player)
+      prompt_if_user(player)
+    end
+  end
+
+  def prompt_if_user(player)
+    if player == @user
+      user.user_shots.print_grid
+      end_turn
+      enter = gets.chomp
+    end
+  end
+
+  def enemy_got_hit?(player, enemy)
+    enemy.all_coord.flatten(1).include?(player.shots.last)
+  end
+
+  def update_board(player)
+    if player == computer
+      user.update_arrangement_board("H", player.shots.last)
+    else
+      user.update_shot_board("H", player.shots.last)
+    end
+  end
+
+  def enemy_status(enemy)
+    status = get_status(enemy)
+    if enemy == computer
+      congrats if status.all? {|stat| stat == "sunk"}
+    else
+      sorry if status.all? {|stat| stat == "sunk"}
+    end
+  end
+
+  def get_status(enemy)
+    enemy.ships.map { |ship| ship.status }
+  end
+
+  def check_if_hit_or_sink(player, enemy)
+    enemy.ships.each do |ship|
+      if ship.location.include?(player.shots.last)
+        hit_or_sink_message(player, enemy)
+      end
+    end
+  end
+
+  def hit_or_sink_message(player, enemy)
+    if (ship.location & player.shots).count == ship.size
+      ship.status = "sunk"
+      sink_message(enemy)
+    else
+      hit_message(enemy)
+    end
+  end
+
+  def sink_message(enemy)
+    if enemy == computer
+      sink_comp(ship)
+    else
+      sink_user(ship)
+    end
+  end
+
+  def hit_message(enemy)
+    if enemy == computer
+      user_hit_message
+    else
+      comp_hit_message
+    end
+  end
+
+  def player_misses(player)
+    if player == computer
+      user.update_arrangement_board("M", computer.shots.last)
       comp_miss_message
+    else
+      user.update_shot_board("M", user.shots.last)
+      miss_message
     end
   end
 

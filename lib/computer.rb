@@ -4,14 +4,14 @@ class Computer
   include Placement
   attr_reader :comp_arrangement,
               :comp_shots,
-              :comp_ships,
+              :ships,
               :all_coord,
               :shots
 
   def initialize(board_size, number_of_ships)
     @comp_arrangement = Board.new(board_size)
     @comp_shots = Board.new(board_size)
-    @comp_ships = []
+    @ships = []
     @all_coord = []
     @shots = []
     run_placement(board_size, number_of_ships)
@@ -74,7 +74,7 @@ class Computer
   def validate_coord(ship, board_size)
     @all_coord << ship.location
     if all_coord.flatten(1).uniq!.nil?
-      @comp_ships << ship
+      @ships << ship
     else
       @all_coord.delete_at(-1)
       ship.reset
@@ -93,7 +93,6 @@ class Computer
       shoot
     else
       @shots << shot
-      shot
     end
   end
 

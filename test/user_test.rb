@@ -54,10 +54,10 @@ class TestUser < Minitest::Test
   def test_format_validate_coordinates
     @player.format_validate_coordinates(@destroyer, "a1 a2")
 
-    assert_equal [[0, 0], [0, 1]], @player.user_ships.first.location
+    assert_equal [[0, 0], [0, 1]], @player.ships.first.location
 
     @player.format_validate_coordinates(@submarine, "B1 D1")
-    assert_equal [[1, 0], [2, 0], [3, 0]], @player.user_ships.last.location
+    assert_equal [[1, 0], [2, 0], [3, 0]], @player.ships.last.location
   end
 
   def test_show_arrangement
@@ -68,14 +68,26 @@ class TestUser < Minitest::Test
     @submarine << [1,3]
     @submarine << [2,3]
 
-    @player.user_ships << @destroyer
-    @player.user_ships << @submarine
+    @player.ships << @destroyer
+    @player.ships << @submarine
 
     assert_nil @player.show_arrangement
   end
 
   def test_shot_validation
-    output = @player.validate_shot("A1")
-    assert_nil output
+    input = "B3"
+    shot = [1, 2]
+    @player.validate_shot(shot)
+    assert_equal [[1,2]], @player.shots
+  end
+
+  def test_error_messages
+    input = "B3"
+    shot = [1, 2]
+    @player.validate_shot(shot)
+    shot_2 = [1, 2]
+    @player.validate_shot(shot_2) #enter then "b1"
+
+    assert_equal [[1,2], [1,0]], @player.shots
   end
 end
