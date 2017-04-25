@@ -22,20 +22,7 @@ class User
     # run_placement(board_size, number_of_ships)
   end
 
-  # def run_placement(board_size, number_of_ships)
-  #   ships = create_ships(number_of_ships)
-  #   ships.each do |ship|
-  #     ship_placement(ship)
-  #   end
-  # end
-
-  # def create_ships(number)
-  #   ships = ["Destroyer", "Submarine", "Battleship", "Carrier"]
-  #   ships = ships[0..number - 1]
-  #   ships.map { |ship| Ship.new(ship) }
-  # end
-
-  def ship_placement(ship)
+  def ship_placement(ship, board_size)
     prompt_coordinates(ship.size)
     coordinates = gets.chomp
     format_validate_coordinates(ship, coordinates)
@@ -50,7 +37,8 @@ class User
       @ships << ship
     else
       ship.reset
-      ship_placement(ship)
+      all_coord.pop
+      ship_placement(ship, user_arrangement.size)
     end
   end
 
@@ -80,7 +68,7 @@ class User
     coord_val << false if is_position_ok?(head, tail) == false
     coord_val << false if is_length_ok?(head, tail, ship) == false
     coord_val << false if no_wrapping?(head, tail) == false
-    coord_val << false if no_overlap?(head, tail, ship) == false
+    coord_val << false if no_overlap?(ship) == false
     good_coord = false if coord_val.any? {|validation| validation == false}
     good_coord
   end
@@ -141,13 +129,12 @@ class User
     columns.include?(head[1].to_i) && columns.include?(tail[1].to_i)
   end
 
-  def no_overlap?(head, tail, ship)
+  def no_overlap?(ship)
     all_coord << ship.location
     overlap = false
-    if all_coord.uniq!.nil?
+    if all_coord.flatten(1).uniq!.nil?
       overlap = true
     else
-      all_coord.delete_at(-1)
       overlap_error
     end
     overlap
@@ -157,7 +144,6 @@ class User
     @ships.each do |ship|
       if ship.location.first[0] == ship.location.last[0]
         ship.location.each do |coord|
-      # binding.pry
           user_arrangement.grid[coord.first][coord.last] = ">"
         end
       else

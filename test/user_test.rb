@@ -41,14 +41,25 @@ class TestUser < Minitest::Test
   end
 
   def test_overlap_validation_of_coordinates
-    assert @player.no_overlap?(["A", "1"], ["A", "2"], @destroyer)
-    refute @player.no_overlap?(["A", "1"], ["A", "3"], @submarine)
+    @destroyer << ["A", "1"]
+    @destroyer << ["A", "2"]
+    assert @player.no_overlap?(@destroyer)
+
+    @destroyer << ["A", "1"]
+    @destroyer << ["A", "2"]
+    @destroyer << ["A", "3"]
+    refute @player.no_overlap?(@submarine)
   end
 
   def test_all_validations
+    @destroyer << ["B", "2"]
+    @destroyer << ["B", "3"]
     assert @player.validate_ship_coord(["B", "2"], ["B", "3"], @destroyer)
+
+    @submarine << ["A", "2"]
+    @submarine << ["B", "2"]
+    @submarine << ["C", "2"]
     refute @player.validate_ship_coord(["A", "2"], ["C", "2"], @submarine)
-    assert @player.validate_ship_coord(["A", "1"], ["C", "1"], @submarine)
   end
 
   def test_format_validate_coordinates
@@ -81,13 +92,43 @@ class TestUser < Minitest::Test
     assert_equal [[1,2]], @player.shots
   end
 
+  def test_run_placement_for_user
+    @player.run_placement(4, 2)
+    #enter a1 a2
+    assert_equal [[0,0], [0,1]], @player.ships.first.location
+    #enter a2 c2 - get error message
+    #enter c1 c3
+    assert_equal [[2,0], [2,1], [2,2]], @player.ships.last.location
+    assert_equal [[[0,0], [0,1]], [[2,0], [2,1], [2,2]]], @player.all_coord
+  end
+
   def test_error_messages
     input = "B3"
     shot = [1, 2]
     @player.validate_shot(shot)
     shot_2 = [1, 2]
-    @player.validate_shot(shot_2) #enter then "b1"
+    @player.validate_shot(shot_2) #its a repeated shot, enter  "b1"
 
     assert_equal [[1,2], [1,0]], @player.shots
+
+    @player.validate_shot([7, 7]) #its outside the board, enter "a1"
+    assert_equal [[1, 2], [1, 0], [0, 0]], @player.shots
   end
+
+  def test_update_player_shot_board
+    assert_equal "H", @player.update_shot_board("H", [0,1])
+    assert_equal "M", @player.update_shot_board("M", [2,2])
+
+    expected = [[" ", "H", " ", " "], [" ", " ", " ", " "], [" ", " ", "M", " "], [" ", " ", " ", " "]]
+    assert_equal expected, @player.user_shots.grid
+  end
+
+  def test_update_player_arrangement_board_to_see_if_its_been_hit
+    assert_equal "H", @player.update_arrangement_board("H", [1,2])
+    assert_equal "M", @player.update_arrangement_board("M", [3,3])
+
+    expected = [[" ", " ", " ", " "], [" ", " ", "H", " "], [" ", " ", " ", " "], [" ", " ", " ", "M"]]
+    assert_equal expected, @player.user_arrangement.grid
+  end
+
 end

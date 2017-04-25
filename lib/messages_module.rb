@@ -37,19 +37,19 @@ module Messages
   end
 
   def position_error
-    return "Ships can only be laid either horizontally or vertically"
+    puts "Ships can only be laid either horizontally or vertically"
   end
 
   def overlap_error
-    return "Ships cannot overlap"
+    puts "Ships cannot overlap"
   end
 
   def wrap_error
-    return "Ships cannot wrap around the board"
+    puts "Ships cannot wrap around the board"
   end
 
   def length_error
-    return "Coordinates must correspond to the first and last units of the ship. (IE: You can’t place a two unit ship at “A1 A3”)"
+    puts "Coordinates must correspond to the first and last units of the ship. (IE: You can’t place a two unit ship at “A1 A3”)"
   end
 
   def prompt_player_shot
