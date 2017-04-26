@@ -5,8 +5,8 @@ class Computer
   attr_reader :comp_arrangement,
               :comp_shots,
               :ships,
-              :all_coord,
               :shots
+  attr_accessor :all_coord
 
   def initialize(board_size, number_of_ships)
     @comp_arrangement = Board.new(board_size)
