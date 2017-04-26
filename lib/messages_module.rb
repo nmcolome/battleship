@@ -76,7 +76,7 @@ module Messages
   end
 
   def miss_message
-    puts "Your missed!"
+    puts "You missed!"
   end
 
   def comp_hit_message(shot)
