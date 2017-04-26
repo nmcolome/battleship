@@ -10,7 +10,8 @@ class Game
   attr_reader :start_time
 
   attr_accessor :computer,
-                :user
+                :user,
+                :is_over
 
   def initialize
     @computer = ""
@@ -72,31 +73,27 @@ class Game
     user.run_placement(board_size, amount_of_ships)
   end
 
-  def user_flow
-    @user.user_shots.print_grid
-    @user.shoot
-    check_enemy_board(@user, @computer)
-    request_enter
-  end
-
-  def comp_flow
-    computer.shoot
-    check_enemy_board(computer, user)
-    @user.user_arrangement.print_grid
-    request_enter
-  end
-
-  def request_enter
-    end_turn
-    enter = gets
-  end
-
   def run_game
     while @is_over == false
       user_flow
       break if enemy_status(@computer)
       comp_flow
       break if enemy_status(@user)
+    end
+  end
+
+  def enemy_status(enemy)
+    enemy_status = get_status(enemy)
+    if enemy == computer
+      if check_dead(enemy_status)
+        congrats(user, elapsed_time)
+        @is_over = true
+      end
+    else
+      if check_dead(enemy_status)
+        sorry(@computer, elapsed_time)
+        @is_over = true
+      end
     end
   end
 
@@ -120,19 +117,23 @@ class Game
     "#{m.to_i}:#{s.to_i} minutes"
   end
 
-  def enemy_status(enemy)
-    enemy_status = get_status(enemy)
-    if enemy == computer
-      if check_dead(enemy_status)
-        congrats(user, elapsed_time)
-        @is_over = true
-      end
-    else
-      if check_dead(enemy_status)
-        sorry(@computer, elapsed_time)
-        @is_over = true
-      end
-    end
+  def user_flow
+    @user.user_shots.print_grid
+    @user.shoot
+    check_enemy_board(@user, @computer)
+    request_enter
+  end
+
+  def comp_flow
+    computer.shoot
+    check_enemy_board(computer, user)
+    @user.user_arrangement.print_grid
+    request_enter
+  end
+
+  def request_enter
+    end_turn
+    enter = gets
   end
 
   def check_enemy_board(player, enemy)

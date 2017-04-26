@@ -142,6 +142,7 @@ class TestGame < Minitest::Test
     status = @game.get_status(@computer)
     assert_equal ["sunk", "sunk"], status
     assert @game.check_dead(status)
+    assert_nil @game.congrats(@user, "2:15 minutes")
   end
 
   def test_when_computer_wins
@@ -150,10 +151,21 @@ class TestGame < Minitest::Test
     @computer.shots << [1,0]
     assert_nil @game.check_enemy_board(@computer, @user)
 
-    assert_equal ["sunk", "alive"], @game.get_status(@user)
+    output = @game.get_status(@user)
+    assert_equal ["sunk", "alive"], output
+    refute @game.check_dead(output)
+    assert_nil @game.enemy_status(@user)
+    refute @game.is_over
   end
 
-  def assert_difficulty_level
-    
-  end
+  # def test_selection_of_difficulty_level
+  #   @game.game_setup("b")
+  #   assert_equal 2, @computer.ships.count
+
+  #   # @game.setup_based_on_difficulty("i")
+  #   # assert_equal 3, @computer.ships.count
+
+  #   # @game.setup_based_on_difficulty("a")
+  #   # assert_equal 4, @computer.ships.count
+  # end
 end
