@@ -67,7 +67,6 @@ class Game
 
   def initialize_both_players(input, board_size, amount_of_ships)
     @computer = Computer.new(board_size, amount_of_ships)
-      # p @computer.all_coord
     prompt_user_setup(input)
     @user = User.new(board_size, amount_of_ships)
     user.run_placement(board_size, amount_of_ships)

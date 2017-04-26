@@ -19,7 +19,6 @@ class User
     @ships = []
     @all_coord = []
     @shots = []
-    # run_placement(board_size, number_of_ships)
   end
 
   def ship_placement(ship, board_size)
@@ -95,14 +94,6 @@ class User
     head[1] == tail[1]
   end
 
-  # def get_ends_row(border)
-  #   if border.length == 2
-  #     row = border[1]
-  #   else
-  #     row = border[1]
-  #   end
-  # end
-
   def is_length_ok?(head, tail, ship)
     length = false
     if horizontal_length(head, tail, ship) || vertical_length(head, tail, ship)
@@ -114,8 +105,6 @@ class User
   end
 
   def horizontal_length(head, tail, ship)
-    # head_column = get_ends_row(head)
-    # tail_column = get_ends_row(tail)
     tail[1].to_i - head[1].to_i == ship.size - 1
   end
 
@@ -139,8 +128,6 @@ class User
   end
 
   def columns_inside_board(head, tail)
-    # head_column = get_ends_row(head)
-    # tail_column = get_ends_row(tail)
     columns = (1..user_arrangement.size).to_a
     columns.include?(head[1].to_i) && columns.include?(tail[1].to_i)
   end
