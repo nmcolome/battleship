@@ -7,7 +7,8 @@ require './lib/ship'
 class Game
   include Messages
 
-  attr_reader :start_time
+  attr_reader :start_time,
+              :messages
 
   attr_accessor :computer,
                 :user,

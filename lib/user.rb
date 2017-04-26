@@ -2,8 +2,8 @@ require './lib/messages_module'
 require './lib/placement_module'
 
 class User
-  include Messages
   include Placement
+  include Messages
 
   attr_reader :user_arrangement,
               :user_shots,
