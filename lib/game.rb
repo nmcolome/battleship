@@ -26,14 +26,26 @@ class Game
   end
 
   def selection(input)
-    if input == "p" || input == "play"
+    if play?(input)
       select_difficulty_level
-    elsif input == "i" || input == "instructions"
+    elsif instructions?(input)
       read_instructions
       request_input
-    elsif input == "q" || input == "quit"
+    elsif quit?(input)
       quits
     end
+  end
+
+  def play?(input)
+    input == "p" || input == "play"
+  end
+
+  def instructions?(input)
+    input == "i" || input == "instructions"
+  end
+
+  def quit?(input)
+    input == "q" || input == "quit"
   end
 
   def request_input
@@ -90,11 +102,9 @@ class Game
         congrats(user, elapsed_time)
         @is_over = true
       end
-    else
-      if check_dead(enemy_status)
+    elsif check_dead(enemy_status)
         sorry(@computer, elapsed_time)
         @is_over = true
-      end
     end
   end
 
@@ -141,11 +151,10 @@ class Game
     if enemy_got_hit?(player, enemy)
       update_board(player)
       check_if_hit_or_sink(player, enemy)
-      prompt_if_user(player)
     else
       player_misses(player)
-      prompt_if_user(player)
     end
+      prompt_if_user(player)
   end
 
   def prompt_if_user(player)
@@ -208,5 +217,4 @@ class Game
       miss_message
     end
   end
-
 end

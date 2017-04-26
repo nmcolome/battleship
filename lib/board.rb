@@ -6,7 +6,7 @@ class Board
   def initialize(size, value = " ")
     @size = size
     @value = value
-    @grid = Array.new(size) { Array.new(size, value)}
+    @grid = Array.new(size) { Array.new(size, value) }
   end
 
   def columns_key(size)
@@ -37,5 +37,4 @@ class Board
       puts rows_key[idx] + " " + row.join("  ")
     end
   end
-
 end

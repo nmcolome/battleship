@@ -23,28 +23,39 @@ class Computer
   end
 
   def assign_ship_head(ship, board_size)
-    if is_horizontal?
-      column = rand(board_size - ship.size)
-      row = rand(board_size)
-      ship << [row, column]
-      assign_full_coordinates(ship, true)
+    if horizontal?
+      create_horizontal_ship_coord(ship, board_size)
     else
-      column = rand(board_size)
-      row = rand(board_size - ship.size)
-      ship << [row, column]
-      assign_full_coordinates(ship, false)
+      create_vertical_ship_coord(ship, board_size)
     end
   end
 
-  def is_horizontal?
+  def create_horizontal_ship_coord(ship, board_size)
+    column = rand(board_size - ship.size)
+    row = rand(board_size)
+    ship << [row, column]
+    assign_full_coordinates(ship, true)
+  end
+
+  def create_vertical_ship_coord(ship, board_size)
+    column = rand(board_size)
+    row = rand(board_size - ship.size)
+    ship << [row, column]
+    assign_full_coordinates(ship, false)
+  end
+
+  def horizontal?
     random = rand(2).to_i
-    random == 0
+    random.zero?
   end
 
   def assign_full_coordinates(ship, horizontal)
     row = ship.location.first.first
     column = ship.location.first.last
+    create_full_coordinates(ship, horizontal, row, column)
+  end
 
+  def create_full_coordinates(ship, horizontal, row, column)
     if horizontal
       (ship.size - 1).times do |i|
         ship.location << [row, column + i + 1]
@@ -80,5 +91,4 @@ class Computer
       @shots << shot
     end
   end
-
 end
