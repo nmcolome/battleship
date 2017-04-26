@@ -158,6 +158,9 @@ class TestGame < Minitest::Test
     refute @game.is_over
   end
 
+  def test_format_time
+    assert_equal "2:15 minutes", @game.format_time(135)
+  end
   # def test_selection_of_difficulty_level
   #   @game.game_setup("b")
   #   assert_equal 2, @computer.ships.count
