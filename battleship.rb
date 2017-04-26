@@ -1,4 +1,5 @@
 require './lib/game'
+require 'pry'
 
 class Battleship
   def initialize

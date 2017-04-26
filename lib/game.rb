@@ -48,26 +48,29 @@ class Game
 
   def game_setup(input)
     @start_time = Time.now
-    if input == "b" || input == "beginner"
-      @computer = Computer.new(4, 2)
-      prompt_user_setup("b")
-      @user = User.new(4, 2)
-      @user.run_placement(4, 2)
-    elsif input == "i" || input == "intermediate"
-      @computer = Computer.new(8, 3)
-      prompt_user_setup("i")
-      @user = User.new(8, 3)
-      @user.run_placement(8, 3)
-    elsif input == "a" || input == "advanced"
-      @computer = Computer.new(12, 4)
-      prompt_user_setup("a")
-      @user = User.new(12, 4)
-      @user.run_placement(12, 4)
-    end
+    setup_based_on_difficulty(input)
     your_arrangement_board
     @user.show_arrangement
     your_shot_board
     run_game
+  end
+
+  def setup_based_on_difficulty(input)
+    if input == "b" || input == "beginner"
+      initialize_both_players("b", 4, 2)
+    elsif input == "i" || input == "intermediate"
+      initialize_both_players("i", 8, 3)
+    elsif input == "a" || input == "advanced"
+      initialize_both_players("a", 12, 4)
+    end
+  end
+
+  def initialize_both_players(input, board_size, amount_of_ships)
+    @computer = Computer.new(board_size, amount_of_ships)
+      # p @computer.all_coord
+    prompt_user_setup(input)
+    @user = User.new(board_size, amount_of_ships)
+    user.run_placement(board_size, amount_of_ships)
   end
 
   def user_flow
@@ -94,7 +97,6 @@ class Game
       user_flow
       break if enemy_status(@computer)
       comp_flow
-      p @computer.all_coord
       break if enemy_status(@user)
     end
   end

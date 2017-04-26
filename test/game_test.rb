@@ -31,132 +31,129 @@ class TestGame < Minitest::Test
     @game.user = @user
   end
 
-  # def test_it_exists
-  #   assert_instance_of Game, @game
-  # end
-
-  # def test_when_user_quits
-  #   skip
-  #   game = Game.new
-
-  #   assert_nil game.selection("q")
-  #   assert_nil game.selection("quit")
-  # end
-
-  # def test_instructions
-  #   skip
-  #   game = Game.new
-
-  #   assert_nil game.selection("i")
-  #   assert_nil game.selection("instructions")
-  # end
-
-  def test_playing_at_beginners_level
-    game = Game.new
-
-    assert_nil game.start
+  def test_it_exists
+    assert_instance_of Game, @game
   end
 
-  # def test_all_ships_are_alive_at_the_beginning
-  #   user_status = @game.get_status(@user)
-  #   comp_status = @game.get_status(@computer)
+  def test_when_user_quits
+    assert_nil @game.selection("q")
+    assert_nil @game.selection("quit")
+  end
 
-  #   assert_equal ["alive", "alive"], user_status
-  #   assert_equal ["alive", "alive"], comp_status
+  def test_instructions
+    skip
+    assert_nil @game.selection("i")
+    # assert_nil @game.selection("instructions")
+  end
 
-  #   refute @game.check_dead(user_status)
-  #   refute @game.check_dead(comp_status)
+  # def test_playing_at_beginners_level
+  #   game = Game.new
+
+  #   assert_nil game.start
   # end
 
-  # def test_when_computer_makes_a_hit
-  #   @computer.shots << [0,0]
-  #   assert_nil @game.check_enemy_board(@computer, @user)
+  def test_all_ships_are_alive_at_the_beginning
+    user_status = @game.get_status(@user)
+    comp_status = @game.get_status(@computer)
 
-  #   expected = [["H", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]]
-  #   assert_equal expected, @user.user_arrangement.grid
-  # end
+    assert_equal ["alive", "alive"], user_status
+    assert_equal ["alive", "alive"], comp_status
 
-  # def test_when_player_makes_a_hit
-  #   @computer.all_coord = [[[0, 1], [1, 1]], [[1, 2], [2, 2], [3, 2]]]
+    refute @game.check_dead(user_status)
+    refute @game.check_dead(comp_status)
+  end
 
-  #   @user.shots << [1,2]
-  #   assert_nil @game.check_enemy_board(@user, @computer)
+  def test_when_computer_makes_a_hit
+    @computer.shots << [0,0]
+    assert_nil @game.check_enemy_board(@computer, @user)
 
-  #   expected = [[" ", " ", " ", " "], [" ", " ", "H", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]]
-  #   assert_equal expected, @user.user_shots.grid
-  # end
+    expected = [["H", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]]
+    assert_equal expected, @user.user_arrangement.grid
+  end
 
-  # def test_when_computer_misses
-  #   @computer.shots << [3,3]
-  #   assert_nil @game.check_enemy_board(@computer, @user)
+  def test_when_player_makes_a_hit
+    @computer.all_coord = [[[0, 1], [1, 1]], [[1, 2], [2, 2], [3, 2]]]
 
-  #   expected = [[" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", "M"]]
-  #   assert_equal expected, @user.user_arrangement.grid
-  # end
+    @user.shots << [1,2]
+    assert_nil @game.check_enemy_board(@user, @computer)
 
-  # def test_when_player_misses
-  #   @computer.all_coord = [[[0, 1], [1, 1]], [[1, 2], [2, 2], [3, 2]]]
+    expected = [[" ", " ", " ", " "], [" ", " ", "H", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]]
+    assert_equal expected, @user.user_shots.grid
+  end
 
-  #   @user.shots << [3,3]
-  #   assert_nil @game.check_enemy_board(@user, @computer)
+  def test_when_computer_misses
+    @computer.shots << [3,3]
+    assert_nil @game.check_enemy_board(@computer, @user)
 
-  #   expected = [[" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", "M"]]
-  #   assert_equal expected, @user.user_shots.grid
-  # end
+    expected = [[" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", "M"]]
+    assert_equal expected, @user.user_arrangement.grid
+  end
 
-  # def test_when_computer_sinks_a_ship
-  #   @computer.shots << [0,0]
-  #   assert_nil @game.check_enemy_board(@computer, @user)
-  #   @computer.shots << [1,0]
-  #   assert_nil @game.check_enemy_board(@computer, @user)
+  def test_when_player_misses
+    @computer.all_coord = [[[0, 1], [1, 1]], [[1, 2], [2, 2], [3, 2]]]
 
-  #   expected = [["H", " ", " ", " "], ["H", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]]
-  #   assert_equal expected, @user.user_arrangement.grid
-  # end
+    @user.shots << [3,3]
+    assert_nil @game.check_enemy_board(@user, @computer)
 
-  # def test_when_player_sinks_a_ship
-  #   @computer.ships.first.location = [[0, 1], [1, 1]]
-  #   @computer.ships.last.location = [[1, 2], [2, 2], [3, 2]]
-  #   @computer.all_coord = [[[0, 1], [1, 1]], [[1, 2], [2, 2], [3, 2]]]
+    expected = [[" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", "M"]]
+    assert_equal expected, @user.user_shots.grid
+  end
 
-  #   @user.shots << [1,1]
-  #   assert_nil @game.check_enemy_board(@user, @computer)
-  #   @user.shots << [0,1]
-  #   assert_nil @game.check_enemy_board(@user, @computer)
+  def test_when_computer_sinks_a_ship
+    @computer.shots << [0,0]
+    assert_nil @game.check_enemy_board(@computer, @user)
+    @computer.shots << [1,0]
+    assert_nil @game.check_enemy_board(@computer, @user)
 
-  #   expected = [[" ", "H", " ", " "], [" ", "H", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]]
-  #   assert_equal expected, @user.user_shots.grid
-  # end
+    expected = [["H", " ", " ", " "], ["H", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]]
+    assert_equal expected, @user.user_arrangement.grid
+  end
 
-  # def test_when_player_wins
-  #   skip
-  #   @computer.ships.first.location = [[0, 1], [1, 1]]
-  #   @computer.ships.last.location = [[1, 2], [2, 2], [3, 2]]
-  #   @computer.all_coord = [[[0, 1], [1, 1]], [[1, 2], [2, 2], [3, 2]]]
+  def test_when_player_sinks_a_ship
+    @computer.ships.first.location = [[0, 1], [1, 1]]
+    @computer.ships.last.location = [[1, 2], [2, 2], [3, 2]]
+    @computer.all_coord = [[[0, 1], [1, 1]], [[1, 2], [2, 2], [3, 2]]]
 
-  #   @user.shots << [1,1]
-  #   assert_nil @game.check_enemy_board(@user, @computer)
-  #   @user.shots << [0,1]
-  #   assert_nil @game.check_enemy_board(@user, @computer)
-  #   @user.shots << [1,2]
-  #   assert_nil @game.check_enemy_board(@user, @computer)
-  #   @user.shots << [2,2]
-  #   assert_nil @game.check_enemy_board(@user, @computer)
-  #   @user.shots << [3,2]
-  #   assert_nil @game.check_enemy_board(@user, @computer)
+    @user.shots << [1,1]
+    assert_nil @game.check_enemy_board(@user, @computer)
+    @user.shots << [0,1]
+    assert_nil @game.check_enemy_board(@user, @computer)
 
-  #   assert_equal "cat", @user.user_shots.grid
-  # end
+    expected = [[" ", "H", " ", " "], [" ", "H", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]]
+    assert_equal expected, @user.user_shots.grid
+  end
 
-  # def test_when_computer_wins
-  #   skip
-  #   @computer.shots << [0,0]
-  #   assert_nil @game.check_enemy_board(@computer, @user)
-  #   @computer.shots << [1,0]
-  #   assert_nil @game.check_enemy_board(@computer, @user)
+  def test_when_player_wins
+    @computer.ships.first.location = [[0, 1], [1, 1]]
+    @computer.ships.last.location = [[1, 2], [2, 2], [3, 2]]
+    @computer.all_coord = [[[0, 1], [1, 1]], [[1, 2], [2, 2], [3, 2]]]
 
-  #   expected = [["H", " ", " ", " "], ["H", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]]
-  #   assert_equal expected, @user.user_arrangement.grid
-  # end
+    @user.shots << [1,1]
+    assert_nil @game.check_enemy_board(@user, @computer)
+    @user.shots << [0,1]
+    assert_nil @game.check_enemy_board(@user, @computer)
+    @user.shots << [1,2]
+    assert_nil @game.check_enemy_board(@user, @computer)
+    @user.shots << [2,2]
+    assert_nil @game.check_enemy_board(@user, @computer)
+    @user.shots << [3,2]
+    assert_nil @game.check_enemy_board(@user, @computer)
 
+    status = @game.get_status(@computer)
+    assert_equal ["sunk", "sunk"], status
+    assert @game.check_dead(status)
+  end
+
+  def test_when_computer_wins
+    @computer.shots << [0,0]
+    assert_nil @game.check_enemy_board(@computer, @user)
+    @computer.shots << [1,0]
+    assert_nil @game.check_enemy_board(@computer, @user)
+
+    assert_equal ["sunk", "alive"], @game.get_status(@user)
+  end
+
+  def assert_difficulty_level
+    
+  end
 end

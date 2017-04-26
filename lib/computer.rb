@@ -19,35 +19,33 @@ class Computer
 
   def ship_placement(ship, board_size)
     ship_head = assign_ship_head(ship, board_size)
-    ship << ship_head
-    assign_full_coordinates(ship)
     validate_coord(ship, board_size)
   end
 
   def assign_ship_head(ship, board_size)
-    border_limit = board_size - ship.size + 1
-
     if is_horizontal?
-      column = rand(border_limit)
-      row = rand(board_size - 1)
+      column = rand(board_size - ship.size)
+      row = rand(board_size)
+      ship << [row, column]
+      assign_full_coordinates(ship, true)
     else
-      column = rand(board_size - 1)
-      row = rand(border_limit)
+      column = rand(board_size)
+      row = rand(board_size - ship.size)
+      ship << [row, column]
+      assign_full_coordinates(ship, false)
     end
-
-    ship_head = [row, column]
   end
 
   def is_horizontal?
-    false
-    true if rand(2) == 0
+    random = rand(2).to_i
+    random == 0
   end
 
-  def assign_full_coordinates(ship)
+  def assign_full_coordinates(ship, horizontal)
     row = ship.location.first.first
     column = ship.location.first.last
 
-    if is_horizontal?
+    if horizontal
       (ship.size - 1).times do |i|
         ship.location << [row, column + i + 1]
       end

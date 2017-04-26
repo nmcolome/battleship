@@ -171,19 +171,18 @@ class User
     user_arrangement.print_grid
   end
 
-  def shoot
+  def prompt_for_shot
     prompt_player_shot
     input = gets.chomp
-    shot = format_input(input)
-    validate_shot(shot)
   end
 
-  def format_input(input)
-    if input == ""
-      shoot
-    else
-      [ABC.index(input[0].upcase), input[1..2].to_i - 1]
+  def shoot
+    input = prompt_for_shot
+    while input == ""
+      input = prompt_for_shot
     end
+    shot = [ABC.index(input[0].upcase), input[1..2].to_i - 1]
+    validate_shot(shot)
   end
 
   def validate_shot(shot)
@@ -204,7 +203,7 @@ class User
   end
 
   def inside_board?(shot)
-    size = (0..user_shots.size-1).to_a
+    size = (0...user_shots.size).to_a
     size.include?(shot[0]) && size.include?(shot[1])
   end
 
