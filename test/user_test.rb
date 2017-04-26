@@ -101,7 +101,6 @@ class TestUser < Minitest::Test
     #enter c1 c3
     # assert_equal [[2,0], [2,1], [2,2]], @player.ships.last.location
     assert_equal 3, @player.ships.last.location.count
-    # assert_equal [[[0,0], [0,1]], [[2,0], [2,1], [2,2]]], @player.all_coord
     assert_equal 2, @player.all_coord.count
   end
 

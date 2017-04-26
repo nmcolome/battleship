@@ -11,8 +11,6 @@ class User
               :all_coord,
               :shots
 
-  ABC = ("A".."Z").to_a
-
   def initialize(board_size, number_of_ships)
     @user_arrangement = Board.new(board_size)
     @user_shots = Board.new(board_size)
