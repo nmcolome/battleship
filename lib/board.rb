@@ -25,7 +25,7 @@ class Board
   end
 
   def border
-    borders = Array.new(size, "===")
+    Array.new(size, "===")
   end
 
   def print_x_axis

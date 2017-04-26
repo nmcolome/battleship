@@ -160,7 +160,7 @@ class User
 
   def prompt_for_shot
     prompt_player_shot
-    input = gets.chomp
+    gets.chomp
   end
 
   def shoot

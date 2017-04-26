@@ -7,4 +7,4 @@ class Battleship
   end
 end
 
-game = Battleship.new
+Battleship.new

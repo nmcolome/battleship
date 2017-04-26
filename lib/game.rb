@@ -134,7 +134,7 @@ class Game
 
   def request_enter
     end_turn
-    enter = gets
+    gets
   end
 
   def check_enemy_board(player, enemy)

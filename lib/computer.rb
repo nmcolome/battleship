@@ -18,7 +18,7 @@ class Computer
   end
 
   def ship_placement(ship, board_size)
-    ship_head = assign_ship_head(ship, board_size)
+    assign_ship_head(ship, board_size)
     validate_coord(ship, board_size)
   end
 
