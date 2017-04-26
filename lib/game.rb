@@ -70,13 +70,25 @@ class Game
   end
 
   def setup_based_on_difficulty(input)
-    if input == "b" || input == "beginner"
+    if beginner?(input)
       initialize_both_players("b", 4, 2)
-    elsif input == "i" || input == "intermediate"
+    elsif intermediate?(input)
       initialize_both_players("i", 8, 3)
-    elsif input == "a" || input == "advanced"
+    elsif advanced?(input)
       initialize_both_players("a", 12, 4)
     end
+  end
+
+  def beginner?(input)
+    input == "b" || input == "beginner"
+  end
+
+  def intermediate?(input)
+    input == "i" || input == "intermediate"
+  end
+
+  def advanced?(input)
+    input == "a" || input == "advanced"
   end
 
   def initialize_both_players(input, board_size, amount_of_ships)

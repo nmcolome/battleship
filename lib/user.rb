@@ -146,18 +146,20 @@ class User
   end
 
   def show_arrangement
-    @ships.each do |ship|
-      if horizontal?(ship.location.first, ship.location.last)
-        ship.location.each do |coord|
-          user_arrangement.grid[coord.first][coord.last] = ">"
-        end
-      else
-        ship.location.each do |coord|
-          user_arrangement.grid[coord.first][coord.last] = "v"
-        end
+    @ships.each { |ship| place_based_on_position(ship) }
+    user_arrangement.print_grid
+  end
+
+  def place_based_on_position(ship)
+    if horizontal?(ship.location.first, ship.location.last)
+      ship.location.each do |coord|
+        user_arrangement.grid[coord.first][coord.last] = ">"
+      end
+    else
+      ship.location.each do |coord|
+        user_arrangement.grid[coord.first][coord.last] = "v"
       end
     end
-    user_arrangement.print_grid
   end
 
   def prompt_for_shot
@@ -167,9 +169,7 @@ class User
 
   def shoot
     input = prompt_for_shot
-    while input == ""
-      input = prompt_for_shot
-    end
+    input = prompt_for_shot while input == ""
     shot = [ABC.index(input[0].upcase), input[1..2].to_i - 1]
     validate_shot(shot)
   end
