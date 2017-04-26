@@ -99,11 +99,11 @@ class Game
     enemy_status = get_status(enemy)
     if enemy == computer
       if check_dead(enemy_status)
-        congrats(user, elapsed_time)
+        congrats(elapsed_time)
         @is_over = true
       end
     elsif check_dead(enemy_status)
-        sorry(@computer, elapsed_time)
+        sorry(elapsed_time)
         @is_over = true
     end
   end

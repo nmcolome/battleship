@@ -1,5 +1,4 @@
 module Placement
-
   def run_placement(board_size, number_of_ships)
     ships = create_ships(number_of_ships)
     ships.each do |ship|
@@ -12,5 +11,4 @@ module Placement
     ships = ships[0..number - 1]
     ships.map { |ship| Ship.new(ship) }
   end
-
 end

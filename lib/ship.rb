@@ -11,7 +11,7 @@ class Ship
     @status = "alive"
   end
 
-  def << (cell)
+  def <<(cell)
     location << cell
   end
 
@@ -27,5 +27,4 @@ class Ship
       "Carrier" => 5
     }
   end
-
 end

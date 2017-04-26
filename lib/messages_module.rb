@@ -1,5 +1,4 @@
 module Messages
-
   ABC = ("A".."Z").to_a
 
   def welcome
@@ -77,7 +76,7 @@ module Messages
   end
 
   def miss_message
-    puts "Your shot was a Miss"
+    puts "Your missed!"
   end
 
   def comp_hit_message(shot)
@@ -96,11 +95,11 @@ module Messages
     puts "You sunk the enemy's #{ship.size}-unit #{ship.name}"
   end
 
-  def sorry(computer, elapsed_time)
+  def sorry(elapsed_time)
     puts "Sorry! You lose!\nYou played for #{elapsed_time} and it took your enemy #{@computer.shots.count} shots to beat you."
   end
 
-  def congrats(user, elapsed_time)
+  def congrats(elapsed_time)
     puts "Congratulations! You win!\nYou played for #{elapsed_time} and it took you #{@user.shots.count} shots to beat your enemy."
   end
 

@@ -36,6 +36,10 @@ class User
     ship_head = [coord[0][0], coord[0][1..2]]
     ship_tail = [coord[1][0], coord[1][1..2]]
     assign_mid_coordinates(ship, ship_head, ship_tail)
+    assign_valid_coord(ship_head, ship_tail, ship)
+  end
+
+  def assign_valid_coord(ship_head, ship_tail, ship)
     if validate_ship_coord(ship_head, ship_tail, ship)
       @ships << ship
     else
@@ -68,15 +72,15 @@ class User
   def validate_ship_coord(head, tail, ship)
     good_coord = true
     coord_val = []
-    coord_val << false if is_position_ok?(head, tail) == false
-    coord_val << false if is_length_ok?(head, tail, ship) == false
+    coord_val << false if position_ok?(head, tail) == false
+    coord_val << false if length_ok?(head, tail, ship) == false
     coord_val << false if no_wrapping?(head, tail) == false
     coord_val << false if no_overlap?(ship) == false
-    good_coord = false if coord_val.any? {|validation| validation == false}
+    good_coord = false if coord_val.any? { |validation| validation == false }
     good_coord
   end
 
-  def is_position_ok?(head, tail)
+  def position_ok?(head, tail)
     position = false
     if horizontal?(head, tail) || vertical?(head, tail)
       position = true
@@ -94,7 +98,7 @@ class User
     head[1] == tail[1]
   end
 
-  def is_length_ok?(head, tail, ship)
+  def length_ok?(head, tail, ship)
     length = false
     if horizontal_length(head, tail, ship) || vertical_length(head, tail, ship)
       length = true
@@ -123,7 +127,7 @@ class User
   end
 
   def rows_inside_board(head, tail)
-    rows = ABC[0..user_arrangement.size-1]
+    rows = ABC[0..user_arrangement.size - 1]
     rows.include?(head[0].upcase) && rows.include?(tail[0].upcase)
   end
 
@@ -145,7 +149,7 @@ class User
 
   def show_arrangement
     @ships.each do |ship|
-      if ship.location.first[0] == ship.location.last[0]
+      if horizontal?(ship.location.first, ship.location.last)
         ship.location.each do |coord|
           user_arrangement.grid[coord.first][coord.last] = ">"
         end
@@ -173,7 +177,7 @@ class User
   end
 
   def validate_shot(shot)
-    if inside_board?(shot) && is_new?(shot)
+    if inside_board?(shot) && new?(shot)
       @shots << shot
     else
       error_messages(shot)
@@ -194,7 +198,7 @@ class User
     size.include?(shot[0]) && size.include?(shot[1])
   end
 
-  def is_new?(shot)
+  def new?(shot)
     !@shots.include?(shot)
   end
 
