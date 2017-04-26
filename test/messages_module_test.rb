@@ -106,11 +106,11 @@ include Messages
   end
 
   def test_sorry
-    assert_nil sorry(@computer, "1:00 minutes")
+    assert_nil sorry("1:00 minutes")
   end
 
   def test_congrats
-    assert_nil congrats(@user, "1:00 minutes")
+    assert_nil congrats("1:00 minutes")
   end
 
   def test_end_turn

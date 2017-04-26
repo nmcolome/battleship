@@ -22,16 +22,16 @@ class TestUser < Minitest::Test
   end
 
   def test_position_validation_of_coordinates
-    assert @player.is_position_ok?(["A","1"], ["A","2"])
-    assert @player.is_position_ok?(["A","1"], ["B","1"])
-    refute @player.is_position_ok?(["A","1"], ["B","2"])
+    assert @player.position_ok?(["A","1"], ["A","2"])
+    assert @player.position_ok?(["A","1"], ["B","1"])
+    refute @player.position_ok?(["A","1"], ["B","2"])
   end
 
   def test_length_validation_of_coordinates
-    assert @player.is_length_ok?(["A","1"], ["A","2"], @destroyer)
-    assert @player.is_length_ok?(["A","1"], ["C","1"], @submarine)
-    refute @player.is_length_ok?(["A","1"], ["A","4"], @destroyer)
-    refute @player.is_length_ok?(["A","1"], ["A","2"], @submarine)
+    assert @player.length_ok?(["A","1"], ["A","2"], @destroyer)
+    assert @player.length_ok?(["A","1"], ["C","1"], @submarine)
+    refute @player.length_ok?(["A","1"], ["A","4"], @destroyer)
+    refute @player.length_ok?(["A","1"], ["A","2"], @submarine)
   end
 
   def test_wrapping_validation_of_coordinates
