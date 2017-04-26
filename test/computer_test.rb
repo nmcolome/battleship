@@ -22,12 +22,11 @@ class TestComputer < Minitest::Test
   def test_assignment_of_coordinates
     submarine = Ship.new("Submarine")
     submarine.location << [0, 0]
-    @comp.assign_full_coordinates(submarine)
+    @comp.assign_full_coordinates(submarine, true)
 
     assert_equal 3, submarine.location.count
     horizontal = [[0, 0], [0, 1], [0, 2]] == submarine.location
-    vertical = [[0, 0], [1, 0], [2, 0]] == submarine.location
-    assert horizontal || vertical
+    assert horizontal
   end
 
   def test_validation_of_coordinates
