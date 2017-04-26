@@ -4,7 +4,7 @@ require './lib/user'
 require './lib/board'
 require './lib/ship'
 
-class Battleship
+class Game
   include Messages
 
   attr_reader :start_time
@@ -19,7 +19,6 @@ class Battleship
   end
 
   def start
-    @start_time = Time.now
     welcome
     request_input
   end
@@ -48,6 +47,7 @@ class Battleship
   end
 
   def game_setup(input)
+    @start_time = Time.now
     if input == "b" || input == "beginner"
       @computer = Computer.new(4, 2)
       prompt_user_setup("b")
@@ -94,6 +94,7 @@ class Battleship
       user_flow
       break if enemy_status(@computer)
       comp_flow
+      p @computer.all_coord
       break if enemy_status(@user)
     end
   end
@@ -115,11 +116,6 @@ class Battleship
   def format_time(time)
     m = time / 60
     s = time % 60
-    if m > 60
-      h = m / 60
-      m = m % 60
-      "#{h.to_i}:#{m.to_i}:#{s.to_i} hour"
-    end
     "#{m.to_i}:#{s.to_i} minutes"
   end
 

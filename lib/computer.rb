@@ -70,7 +70,7 @@ class Computer
   end
 
   def shoot
-    limit = rand(comp_shots.size)
+    limit = comp_shots.size
     shot = [rand(limit).to_i, rand(limit).to_i]
     validate_shot(shot)
   end

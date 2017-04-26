@@ -25,13 +25,17 @@ class User
   def ship_placement(ship, board_size)
     prompt_coordinates(ship.size)
     coordinates = gets.chomp
-    format_validate_coordinates(ship, coordinates)
+    if coordinates == ""
+      ship_placement(ship, board_size)
+    else
+      format_validate_coordinates(ship, coordinates)
+    end
   end
 
   def format_validate_coordinates(ship, coordinates)
     coord = coordinates.split(" ")
-    ship_head = coord[0].split(//)
-    ship_tail = coord[1].split(//)
+    ship_head = [coord[0][0], coord[0][1..2]]
+    ship_tail = [coord[1][0], coord[1][1..2]]
     assign_mid_coordinates(ship, ship_head, ship_tail)
     if validate_ship_coord(ship_head, ship_tail, ship)
       @ships << ship
@@ -91,6 +95,14 @@ class User
     head[1] == tail[1]
   end
 
+  # def get_ends_row(border)
+  #   if border.length == 2
+  #     row = border[1]
+  #   else
+  #     row = border[1]
+  #   end
+  # end
+
   def is_length_ok?(head, tail, ship)
     length = false
     if horizontal_length(head, tail, ship) || vertical_length(head, tail, ship)
@@ -102,6 +114,8 @@ class User
   end
 
   def horizontal_length(head, tail, ship)
+    # head_column = get_ends_row(head)
+    # tail_column = get_ends_row(tail)
     tail[1].to_i - head[1].to_i == ship.size - 1
   end
 
@@ -125,6 +139,8 @@ class User
   end
 
   def columns_inside_board(head, tail)
+    # head_column = get_ends_row(head)
+    # tail_column = get_ends_row(tail)
     columns = (1..user_arrangement.size).to_a
     columns.include?(head[1].to_i) && columns.include?(tail[1].to_i)
   end
@@ -158,8 +174,16 @@ class User
   def shoot
     prompt_player_shot
     input = gets.chomp
-    shot = [ABC.index(input[0].upcase), input[1].to_i - 1]
+    shot = format_input(input)
     validate_shot(shot)
+  end
+
+  def format_input(input)
+    if input == ""
+      shoot
+    else
+      [ABC.index(input[0].upcase), input[1..2].to_i - 1]
+    end
   end
 
   def validate_shot(shot)
